@@ -38,6 +38,14 @@ class WelcomeClient extends Component {
   }
 
   render () {
+    
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(userInfo);
+
+    console.log('URL con la region');
+    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=level`);
     return (
       <div className="WelcomeClient">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -73,7 +81,7 @@ class WelcomeClient extends Component {
               <br/>
               <br/>
               <br/>
-                  <h1>Bienvenido Cliente</h1>
+                  <h1>Bienvenido {userInfo.name}</h1>
                   <p>
                   Esperamos que disfrute las búsquedas
                   </p>
