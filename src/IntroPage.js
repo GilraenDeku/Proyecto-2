@@ -62,7 +62,7 @@ class IntroPage extends Component {
     }
   }
 
-  searchLanguaje(name){
+  createJsonLocalStorage(name){
     for(let i = 0; i < this.state.items.length; i++){
       if(this.state.items[i].name === name){
         this.state.jsonLocalStorage.name = name;
@@ -74,6 +74,10 @@ class IntroPage extends Component {
       else{
       }
     }
+  }
+
+  createJsonLocalStorageAdmin(){
+    this.state.jsonLocalStorage.region = this.state.selectRegion;
   }
 
 
@@ -137,6 +141,7 @@ class IntroPage extends Component {
             })
           }else{
             if(this.state.inputName === 'Admin'){
+              this.createJsonLocalStorageAdmin();
               this.setState({
                 loginFlag: true
               })
@@ -155,7 +160,7 @@ class IntroPage extends Component {
     for(let i = 0; i < this.state.items.length; i++){
       if(this.state.items[i].name === name){
         flag = true
-        this.searchLanguaje(name);
+        this.createJsonLocalStorage(name);
       }
       else{
       }
