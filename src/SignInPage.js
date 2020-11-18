@@ -7,7 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Jumbotron from 'react-bootstrap/Jumbotron';
-import Badge from 'react-bootstrap/Badge'
+import Badge from 'react-bootstrap/Badge';
 import BootstrapTable                            from 'react-bootstrap-table-next';
 import paginationfactory                         from 'react-bootstrap-table2-paginator';
 
@@ -16,7 +16,6 @@ import paginationfactory                         from 'react-bootstrap-table2-pa
 class SignInPage extends Component {
 
   constructor(props){
-    console.log("Entra a SignInPage");
 		super(props)
 		this.state = {
       registerFlag: false,
