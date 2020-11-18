@@ -1,0 +1,194 @@
+{
+	"name":" ",
+	"age":" ",
+	"gender":" ",
+	"country":" ",
+	"learn":[
+		{"language":" ","level":" "}
+	],
+	"teach":[
+		{"language":" ","level":" "}
+	],
+	"hobbies":[
+		" "
+	],
+	"media":[
+		" "
+	]
+}
+
+
+
+listName: "Deku20"
+
+
+
+
+
+
+
+http://localhost:5000/get?continent=EUR&collection=user
+
+
+
+
+
+
+CONSULTA #1
+
+const url = "http://localhost:5000/people_learn?continent=AME";
+
+    async componentDidMount(){
+
+        const info = {"learn": ["Japanese", "German"]};
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+
+
+
+CONSULTA #2
+
+const url = "http://localhost:5000/people_learn_teach?continent=AME";
+
+    async componentDidMount(){
+
+        const info = {"learn": ["Spanish","German"], "teach": ["English"]}
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+
+
+CONSULTA #3
+
+const url = "http://localhost:5000/people_learn_teach_country?continent=AME";
+
+    async componentDidMount(){
+
+        const info = {"country": "Costa Rica", "learn": ["German"], "teach": ["Spanish"]}
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+CONSULTA #4
+
+const url = "http://localhost:5000/people_learn_teach_country_age?continent=AME";
+
+    async componentDidMount(){
+
+        const info = {"country": "Costa Rica", "learn": ["German", "Chinese"], "teach": ["Spanish", "Slovak"], "min": 20, "max": 25}
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+CONSULTA #5
+
+const url = "http://localhost:5000/update?continent=AME";
+
+    async componentDidMount(){
+
+        const info = {"name": "CarpeDiem", "hobbies": ["Cocina"], "media": ["Zoom", "Discord"]}
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+REGISTER
+
+
+
+const url = "http://localhost:5000/register?continent=AME";
+
+    async componentDidMount(){
+
+        //const info = {"learn": ["Japanese", "German"]};
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(info)
+        };
+        const response = await fetch(url, requestOptions);
+        const data = await response.json();
+        console.log(data);
+}
+
+
+
+
+<Route path="/IntroPage">
+                <IntroPage />
+            </Route>
+            <Route path="/">
+                <IntroPage />
+            </Route>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
