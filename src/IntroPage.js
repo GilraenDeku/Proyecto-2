@@ -30,13 +30,19 @@ class IntroPage extends Component {
         hobbies:[],
         media:[],
         signinFlag: false
+      },
+      jsonLocalStorage: {
+        name: '',
+        learn: null,
+        teach: null,
+        region: ''
       }
 		}
 
   }
   
   componentDidMount = async (e) => {
-    fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch (err => alert(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch (err => alert(err))
     .then(response => response.json())
     .then(response => this.loginAttempt(response))
     .catch(err => this.errorHandler(err))
@@ -44,15 +50,28 @@ class IntroPage extends Component {
 
   renderRedirect = () => {
     if (this.state.loginFlag) {
-      return <Redirect to='/WelcomePage' />
+      return <Redirect to='/WelcomePage'/>
     }else{
       if (this.state.signinFlag) {
-        console.log("Entra");
         return <Redirect to='/SignInPage' />
       }else{
         if(this.state.clientFlag) {
           return <Redirect to='/WelcomeClient' />
         }
+      }
+    }
+  }
+
+  searchLanguaje(name){
+    for(let i = 0; i < this.state.items.length; i++){
+      if(this.state.items[i].name === name){
+        this.state.jsonLocalStorage.name = name;
+        this.state.jsonLocalStorage.learn = this.state.items[i].learn;
+        this.state.jsonLocalStorage.teach = this.state.items[i].teach;
+        this.state.jsonLocalStorage.region = this.state.selectRegion;
+        console.log(this.state.jsonLocalStorage);
+      }
+      else{
       }
     }
   }
@@ -66,7 +85,7 @@ class IntroPage extends Component {
 
     this.state.jsonFile.learn.push({"language":  newlanguage, "level": newlevel});
 
-    console.log(this.state.jsonFile);
+    //console.log(this.state.jsonFile);
 
   }
 
@@ -89,8 +108,6 @@ class IntroPage extends Component {
   }
 
   loginAttempt = (res) => {
-    console.log('entra');
-    console.log(res);
     this.setState({
         items: res
     })
@@ -138,6 +155,7 @@ class IntroPage extends Component {
     for(let i = 0; i < this.state.items.length; i++){
       if(this.state.items[i].name === name){
         flag = true
+        this.searchLanguaje(name);
       }
       else{
       }
@@ -146,6 +164,15 @@ class IntroPage extends Component {
   }
   
   render() {
+    localStorage.clear();
+
+    if (!localStorage.getItem('user_info')){
+      localStorage.setItem('user_info', '');
+    }
+
+
+    localStorage.setItem('user_info', JSON.stringify(this.state.jsonLocalStorage));
+    
     return (
       <div className='IntroPage'>
         {this.renderRedirect()}
