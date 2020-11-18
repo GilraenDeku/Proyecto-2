@@ -1,0 +1,10 @@
+.IntroPage {
+  text-align: center;
+  margin-bottom: auto;
+  margin-left: auto;
+  background-image: url(./images/LogInFondo.jpg);
+}
+
+.Container {
+  border: 5px solid gray;
+}
