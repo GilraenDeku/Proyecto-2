@@ -39,7 +39,12 @@ class Register extends Component {
   }
 
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=AME&collection=user`).catch (err => alert(err))
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`);
+
+    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch (err => alert(err))
     .then(response => response.json())
     .then(response => this.loginAttempt(response))
     .catch(err => this.errorHandler(err))
