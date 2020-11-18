@@ -1,0 +1,11 @@
+
+.Country {
+    text-align: center;
+    background-image: url(../images/Fondo.png);
+    background-size: cover;
+}
+
+.Container {
+    text-align: center;
+}
+
