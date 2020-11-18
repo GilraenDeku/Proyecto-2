@@ -29,7 +29,7 @@ class WelcomePage extends Component {
   clickPresionado = (event) =>{
     this.setState({
       loginFlag: true
-  })
+    })
   }
 
   renderRedirect = () => {
