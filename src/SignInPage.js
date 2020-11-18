@@ -165,6 +165,7 @@ class SignInPage extends Component {
   }
 
   languageAttempt = (res) => {
+
     this.setState({
       languagelistGet: res
     })
