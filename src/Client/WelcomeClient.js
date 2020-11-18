@@ -33,7 +33,7 @@ class WelcomeClient extends Component {
 
   renderRedirect = () => {
     if (this.state.loginFlag) {
-      return <Redirect to='/SignInPage' />
+      return <Redirect to='/IntroPage' />
     }
   }
 
