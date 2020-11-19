@@ -51,10 +51,10 @@ class Register extends Component {
   }
 
 loginAttempt = (res) => {
-  this.setState({
+    this.setState({
       items: res
-  })
-}
+    })
+  }
 
 setListName = () => {
   var testlist = [];
