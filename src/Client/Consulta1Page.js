@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import { Button } from 'reactstrap';
 import Navbar from 'react-bootstrap/Navbar';
 import { Image } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import { Redirect }                              from 'react-router-dom';
 import './WelcomeClient.css';
+import './Consulta1Page.css';
 import logo from '../images/logo.png';
 
 class Consulta1Page extends Component {
@@ -50,49 +52,31 @@ class Consulta1Page extends Component {
                 <Navbar.Collapse id="responsive-navbar-nav">
 
                     <Nav className="mr-auto">
-                    <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                     <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
                     <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
                     <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
                     <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                    <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                     <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
                     </Nav>
 
                 </Navbar.Collapse>
                 </Navbar>
                 {this.renderRedirect()};
-          <Container>
-            <Row>
-              <Col>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <Image src={logo} fluid />
-              <br/>
-              <br/>
-              <br/>
-                  <h1>Consulta #1</h1>
-                  <p>
-                  Esta es la página de la Consulta #1
-                  </p>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              <br/>
-              </Col>
-            </Row>
-          </Container>
+                <Container>
+              <Row>
+                <Col>
+                <Jumbotron fluid>
+                    <h1>Consulta #5 Modificar mis datos</h1>
+                    <p>
+                    Un usuario puede modificar los siguientes datos:
+                    hobbies, medio por el cual desea ser contactado para practicar el
+                    idioma
+                    </p>
+                </Jumbotron>
+                </Col>
+              </Row>
+            </Container>
       </div>
     );
   }
