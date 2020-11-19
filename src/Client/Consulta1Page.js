@@ -171,18 +171,31 @@ class Consulta1Page extends Component {
   crearJson = () => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
     this.state.jsonFile.name = userInfo.name;
-    this.state.jsonFile.hobbies.push(this.state.guardarHobbieJson);
-    this.state.jsonFile.media.push(this.state.guardarMediaJson);
+    for(let i = 0; i < this.state.guardarHobbieJson.length; i++){
+      this.state.jsonFile.hobbies.push(this.state.guardarHobbieJson[i])      
+    }
+    for(let i = 0; i < this.state.guardarMediaJson.length; i++){
+      this.state.jsonFile.media.push(this.state.guardarMediaJson[i])      
+    }
+
     console.log('El JSON File');
     console.log(this.state.jsonFile);
   }
 
   clickRealizarBúsqueda = () => {
-    this.busquedaResultados();
     this.crearJson();
+    this.busquedaResultados();
     this.setState({
       resultadosFlag: true
     })
+  }
+
+  sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
   }
 
   busquedaResultados = async () => {
@@ -196,10 +209,13 @@ class Consulta1Page extends Component {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(this.state.jsonFile)
     };
+
     const response = await fetch(url, requestOptions);
-    const data = await response.json();
+    this.sleep(500);
+    window.location.reload();
 
   }
+  
 
   render () {
 
@@ -353,7 +369,7 @@ class Consulta1Page extends Component {
                     <Col sm="12" md={{ size: 6, offset: 0 }}>
                       <h3>
                         <Button onClick={this.clickRealizarBúsqueda}
-                        variant="primary" >Realizar Búsqueda</Button>
+                        variant="primary" >Modificar Datos</Button>
                       </h3>
                     </Col>
                   </Row>
