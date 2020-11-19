@@ -135,11 +135,11 @@ class Consulta2Page extends Component {
                   <Navbar.Collapse id="responsive-navbar-nav">
   
                       <Nav className="mr-auto">
-                      <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                       <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
                       <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
                       <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
                       <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                      <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                       <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
                       </Nav>
   
@@ -242,11 +242,11 @@ class Consulta2Page extends Component {
                   <Navbar.Collapse id="responsive-navbar-nav">
   
                       <Nav className="mr-auto">
-                      <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                       <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
                       <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
                       <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
                       <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                      <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
                       <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
                       </Nav>
   
