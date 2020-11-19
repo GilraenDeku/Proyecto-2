@@ -36,6 +36,7 @@ class Consulta2Page extends Component {
       },
       resultadosFlag: false,
       resultadoJson: null,
+      resultado:[],
     }
   }
 
@@ -72,6 +73,24 @@ class Consulta2Page extends Component {
     })
   }
 
+
+  creacionListaTabla = () => {
+    if(this.state.resultado.length === this.state.resultadoJson.length){
+
+    }
+    else{
+
+      for(let i = 0; i < this.state.resultadoJson.length; i++){
+        this.state.resultado.push({
+          'name': this.state.resultadoJson[i].name,
+          'age': this.state.resultadoJson[i].age,
+          'gender': this.state.resultadoJson[i].gender
+        })
+      }
+
+    }
+  }
+
   busquedaResultados = async () => {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
@@ -85,7 +104,8 @@ class Consulta2Page extends Component {
     };
     const response = await fetch(url, requestOptions);
     const data = await response.json();
-    this.state.resultadoJson = Data;
+    this.state.resultadoJson = data;
+    this.creacionListaTabla();
 
   }
 
@@ -97,9 +117,10 @@ class Consulta2Page extends Component {
       { dataField: 'language', text: 'Lenguaje Seleccionado' }
     ];
 
-    const columnsMeansPractice = [
-      { dataField: '_id', text: 'Pais' },
-      { dataField: 'count', text: 'Cantidad de personas' }
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
     ];
 
     if(this.state.resultadosFlag){
@@ -161,7 +182,7 @@ class Consulta2Page extends Component {
                 </Col>
                 <Col md="auto">
                   <Button onClick={this.clickAddLanguage}
-                  variant="primary" >ADD</Button>
+                  variant="primary" >Añadir</Button>
                 </Col>
               </Row>
   
@@ -186,6 +207,15 @@ class Consulta2Page extends Component {
                 <h3>
                   <Badge variant="light">Resultados</Badge>
                 </h3>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <BootstrapTable
+                      keyField="name"
+                      data={this.state.resultado}
+                      columns={columnsRespuesta}/>
                 </Col>
               </Row>
             </Container>
@@ -259,7 +289,7 @@ class Consulta2Page extends Component {
                 </Col>
                 <Col md="auto">
                   <Button onClick={this.clickAddLanguage}
-                  variant="primary" >ADD</Button>
+                  variant="primary" >Añadir</Button>
                 </Col>
               </Row>
   
