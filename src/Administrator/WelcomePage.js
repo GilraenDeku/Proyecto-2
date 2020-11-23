@@ -45,18 +45,18 @@ class WelcomePage extends Component {
       <div className="WelcomePage">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-          <Navbar.Brand href="./WelcomePage">Welcome</Navbar.Brand>
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
           <Navbar.Collapse id="responsive-navbar-nav">
 
             <Nav className="mr-auto">
-              <Nav.Link href="./Register">People Register</Nav.Link>
-              <Nav.Link href="./Country">People Register by Country</Nav.Link>
-              <Nav.Link href="./Teaching">People Register by Teaching Language</Nav.Link>
-              <Nav.Link href="./Learning">People Register by Learning Language</Nav.Link>
-              <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
             </Nav>
 
           </Navbar.Collapse>
@@ -78,9 +78,9 @@ class WelcomePage extends Component {
               <br />
               <br />
               <br />
-              <h1>Welcome Administrator</h1>
+              <h1>Bienvenido Administrador</h1>
               <p>
-                Hope you have a nice time
+                Esperamos que disfrute las búsquedas
                   </p>
               <br />
               <br />
