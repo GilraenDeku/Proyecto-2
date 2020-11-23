@@ -1,6 +1,6 @@
-import React, { Component }                              from 'react';
-import { Button, Row, Col, Container} from 'reactstrap';
-import { Redirect }                              from 'react-router-dom';
+import React, { Component } from 'react';
+import { Button, Row, Col, Container } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 import { Image, InputGroup, FormControl } from 'react-bootstrap';
 import './SignInPage.css';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -8,16 +8,16 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Badge from 'react-bootstrap/Badge';
-import BootstrapTable                            from 'react-bootstrap-table-next';
-import paginationfactory                         from 'react-bootstrap-table2-paginator';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
 
 
 
 class SignInPage extends Component {
 
-  constructor(props){
-		super(props)
-		this.state = {
+  constructor(props) {
+    super(props)
+    this.state = {
       registerFlag: false,
       goBackFlag: false,
       items: [],
@@ -27,16 +27,16 @@ class SignInPage extends Component {
       countryList: [],
       selectCountry: '',
       ageList: [
-        0,1,2,3,4,5,6,7,8,9,10,
-        11,12,13,14,15,16,17,18,19,20,
-        21,22,23,24,25,26,27,28,29,30,
-        31,32,33,34,35,36,37,38,39,40,
-        41,42,43,44,45,46,47,48,49,50,
-        51,52,53,54,55,56,57,58,59,60,
-        61,62,63,64,65,66,67,68,69,70,
-        71,72,73,74,75,76,77,78,79,80,
-        81,82,83,84,85,86,87,88,89,90,
-        91,92,93,94,95,96,97,98,99,100
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+        61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+        71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+        81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+        91, 92, 93, 94, 95, 96, 97, 98, 99, 100
       ],
       selectGender: '',
       showGender: '',
@@ -68,39 +68,39 @@ class SignInPage extends Component {
 
       selectMeans: '',
       meansLitTemp: [],
-      mediaListJson:[],
+      mediaListJson: [],
       meansList: [],
 
       languageLearnJson: []
-		}
+    }
 
   }
-  
+
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=country`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.countryAttempt(response))
-    .catch(err => this.errorHandler(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=country`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.countryAttempt(response))
+      .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=language`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.languageAttempt(response))
-    .catch(err => this.errorHandler(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=language`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.languageAttempt(response))
+      .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=level`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.levelAttempt(response))
-    .catch(err => this.errorHandler(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=level`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.levelAttempt(response))
+      .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=hobbie`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.hobbieAttempt(response))
-    .catch(err => this.errorHandler(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.hobbieAttempt(response))
+      .catch(err => this.errorHandler(err))
 
-    fetch(`http://localhost:5000/get?continent=EUR&collection=media`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.meansAttempt(response))
-    .catch(err => this.errorHandler(err))
+    fetch(`http://localhost:5000/get?continent=EUR&collection=media`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.meansAttempt(response))
+      .catch(err => this.errorHandler(err))
 
 
 
@@ -110,49 +110,49 @@ class SignInPage extends Component {
     if (this.state.registerFlag) {
       console.log("Entra a registerFlag");
       return <Redirect to='/WelcomePage' />
-    }else{
-      if(this.state.goBackFlag){
+    } else {
+      if (this.state.goBackFlag) {
         return <Redirect to='/IntroPage' />
       }
     }
   }
 
 
-  writeJson = () =>{
+  writeJson = () => {
 
     const newlanguage = 'Dayanna';
 
     const newlevel = '1234';
 
-    this.state.jsonFile.learn.push({"language":  newlanguage, "level": newlevel});
+    this.state.jsonFile.learn.push({ "language": newlanguage, "level": newlevel });
 
   }
 
-  clickAddLearnPresionado = (event) =>{
-    this.state.languageLearnlistaTemp.push({"language":  this.state.selectLanguageLearn, "level": this.state.selectLevelLearn});
+  clickAddLearnPresionado = (event) => {
+    this.state.languageLearnlistaTemp.push({ "language": this.state.selectLanguageLearn, "level": this.state.selectLevelLearn });
   }
 
-  clickAddTeachPresionado = (event) =>{
-    this.state.languageTeachlistTemp.push({"language":  this.state.selectLanguageTeach, "level": this.state.selectLevelTeach});
+  clickAddTeachPresionado = (event) => {
+    this.state.languageTeachlistTemp.push({ "language": this.state.selectLanguageTeach, "level": this.state.selectLevelTeach });
   }
 
-  clickAddHobbie = (event) =>{
-    this.state.hobbieListTemp.push({"name":  this.state.selectHobbie});
+  clickAddHobbie = (event) => {
+    this.state.hobbieListTemp.push({ "name": this.state.selectHobbie });
     this.state.hobbieListJson.push(this.state.selectHobbie);
   }
 
-  clickAddMean = (event) =>{
-    this.state.meansLitTemp.push({"name":  this.state.selectMeans});
+  clickAddMean = (event) => {
+    this.state.meansLitTemp.push({ "name": this.state.selectMeans });
     this.state.mediaListJson.push(this.state.selectMeans);
   }
 
-  inputPresionadoName = (event) =>{
+  inputPresionadoName = (event) => {
     this.setState({
       inputName: event.target.value
     })
   }
 
-  inputPresionadoPassword = (event) =>{
+  inputPresionadoPassword = (event) => {
     this.setState({
       inputPassword: event.target.value
     })
@@ -191,14 +191,14 @@ class SignInPage extends Component {
 
   clickSelectEstado = (res) => {
     this.setState({
-          selectRegion: res
-      })
+      selectRegion: res
+    })
   }
 
   clickSelectAge = (res) => {
     this.setState({
-          selectAge: res
-      })
+      selectAge: res
+    })
   }
 
   clickSelectGender = (res) => {
@@ -207,17 +207,17 @@ class SignInPage extends Component {
       selectGender: res
     })
 
-    if(res === 'F'){
+    if (res === 'F') {
       this.setState({
         showGender: 'Female'
       })
-    }else{
-      if(res === 'M'){
+    } else {
+      if (res === 'M') {
         this.setState({
           showGender: 'Male'
         })
-      }else{
-        if(res === 'I'){
+      } else {
+        if (res === 'I') {
           this.setState({
             showGender: 'Undefined'
           })
@@ -228,37 +228,37 @@ class SignInPage extends Component {
 
   clickSelectCountry = (res) => {
     this.setState({
-          selectCountry: res
-      })
+      selectCountry: res
+    })
   }
 
   clickSelectLanguageLearn = (res) => {
     this.setState({
-          selectLanguageLearn: res
-      })
+      selectLanguageLearn: res
+    })
   }
 
   clickSelectLanguageTeach = (res) => {
     this.setState({
-          selectLanguageTeach: res
-      })
+      selectLanguageTeach: res
+    })
   }
 
   clickSelectHobbie = (res) => {
     this.setState({
-          selectHobbie: res
-      })
+      selectHobbie: res
+    })
   }
 
   clickSelectLevelLearn = (res) => {
     this.setState({
-          selectLevelLearn: res
-      })
+      selectLevelLearn: res
+    })
   }
 
   clickSelectMean = (res) => {
     this.setState({
-          selectMeans: res
+      selectMeans: res
     })
   }
 
@@ -316,18 +316,18 @@ class SignInPage extends Component {
   }
 
 
-  searchCountry(name){
+  searchCountry(name) {
     var flag = false;
-    for(let i = 0; i < this.state.items.length; i++){
-      if(this.state.items[i].name === name){
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
         flag = true
       }
-      else{
+      else {
       }
     }
-    return(flag);
+    return (flag);
   }
-  
+
   render() {
     const columnslanguajeLearn = [
       { dataField: 'language', text: 'Languages to Learn' },
@@ -349,8 +349,8 @@ class SignInPage extends Component {
             <Col>
               <container>
                 <Jumbotron fluid>
-                    <h1>Register</h1>
-                    <p>
+                  <h1>Register</h1>
+                  <p>
                     Register as a new User
                     </p>
                 </Jumbotron>
@@ -363,58 +363,58 @@ class SignInPage extends Component {
           */}
           <Row>
             <Col sm="12" md={{ size: 6, offset: 1 }}>
-            <InputGroup className="mb-3">
-            <InputGroup.Prepend>
-              <InputGroup.Text id="inputGroup-sizing-default">Name</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl
-              aria-label="Name"
-              aria-describedby="inputGroup-sizing-default"
-              onChange={this.inputPresionadoName}
-            />
-            </InputGroup>
+              <InputGroup className="mb-3">
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroup-sizing-default">Name</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  aria-label="Name"
+                  aria-describedby="inputGroup-sizing-default"
+                  onChange={this.inputPresionadoName}
+                />
+              </InputGroup>
             </Col>
             <Col>
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Age'}
                 onSelect={this.clickSelectAge}
-				      >
+              >
                 {this.state.ageList.map((catg) => (
-				      	<Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectAge}</p>
             </Col>
           </Row>
           <Row>
             <Col sm="12" md={{ size: 6, offset: 1 }}>
               <DropdownButton
-				        as={ButtonGroup}
+                as={ButtonGroup}
                 title={'Choose Gender'}
                 onSelect={this.clickSelectGender}
-				      >
+              >
                 <Dropdown.Item eventKey="F">Female</Dropdown.Item>
                 <Dropdown.Item eventKey="M">Male</Dropdown.Item>
                 <Dropdown.Item eventKey="I">Undefined</Dropdown.Item>
-				      </DropdownButton>
+              </DropdownButton>
               <p>{this.state.showGender}</p>
             </Col>
             <Col>
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Country'}
                 onSelect={this.clickSelectCountry}
-				      >
+              >
                 {this.state.countryList.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectCountry}</p>
             </Col>
           </Row>
         </container>
-        
+
 
         {/*
           Selección de lenguaje Aprender
@@ -422,44 +422,44 @@ class SignInPage extends Component {
 
         <container>
           <h3>
-          <Badge variant="light">Select your language to learn</Badge>
+            <Badge variant="light">Select your language to learn</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Language'}
                 onSelect={this.clickSelectLanguageLearn}
-				      >
+              >
                 {this.state.languagelistGet.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectLanguageLearn}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <DropdownButton
-				        as={ButtonGroup}
+                as={ButtonGroup}
                 title={'Choose Level'}
                 onSelect={this.clickSelectLevelLearn}
-				      >
+              >
                 {this.state.levellistGet.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectLevelLearn}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <Button onClick={this.clickAddLearnPresionado}
-              variant="primary" >ADD</Button>
-              </Col>
+                variant="primary" >ADD</Button>
+            </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <BootstrapTable
-              keyField="language"
-              data={this.state.languageLearnlistaTemp}
-              columns={columnslanguajeLearn}/>
+                keyField="language"
+                data={this.state.languageLearnlistaTemp}
+                columns={columnslanguajeLearn} />
             </Col>
           </Row>
         </container>
@@ -477,44 +477,44 @@ class SignInPage extends Component {
 
         <container>
           <h3>
-          <Badge variant="light">Select your language to teach</Badge>
+            <Badge variant="light">Select your language to teach</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Language'}
                 onSelect={this.clickSelectLanguageTeach}
-				      >
+              >
                 {this.state.languagelistGet.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectLanguageTeach}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <DropdownButton
-				        as={ButtonGroup}
+                as={ButtonGroup}
                 title={'Choose Level'}
                 onSelect={this.clickSelectLevelTeach}
-				      >
+              >
                 {this.state.levellistGet.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectLevelTeach}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <Button onClick={this.clickAddTeachPresionado}
-              variant="primary" >ADD</Button>
-              </Col>
+                variant="primary" >ADD</Button>
+            </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <BootstrapTable
-              keyField="language"
-              data={this.state.languageTeachlistTemp}
-              columns={columnslanguajeLearn}/>
+                keyField="language"
+                data={this.state.languageTeachlistTemp}
+                columns={columnslanguajeLearn} />
             </Col>
           </Row>
         </container>
@@ -530,32 +530,32 @@ class SignInPage extends Component {
 
         <container>
           <h3>
-          <Badge variant="light">Select your Hobbie</Badge>
+            <Badge variant="light">Select your Hobbie</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Hobbie'}
                 onSelect={this.clickSelectHobbie}
-				      >
+              >
                 {this.state.hobbieList.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectHobbie}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <Button onClick={this.clickAddHobbie}
-              variant="primary" >ADD</Button>
-              </Col>
+                variant="primary" >ADD</Button>
+            </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <BootstrapTable
-              keyField="name"
-              data={this.state.hobbieListTemp}
-              columns={columnshobbie}/>
+                keyField="name"
+                data={this.state.hobbieListTemp}
+                columns={columnshobbie} />
             </Col>
           </Row>
         </container>
@@ -576,32 +576,32 @@ class SignInPage extends Component {
 
         <container>
           <h3>
-          <Badge variant="light">Select your Mean to practice</Badge>
+            <Badge variant="light">Select your Mean to practice</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Mean to Practice'}
                 onSelect={this.clickSelectMean}
-				      >
+              >
                 {this.state.meansList.map((catg) => (
-				      	<Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-				      ))}
-				      </DropdownButton>
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
               <p>{this.state.selectMeans}</p>
-             </Col>
-             <Col md="auto">
+            </Col>
+            <Col md="auto">
               <Button onClick={this.clickAddMean}
-              variant="primary" >ADD</Button>
-              </Col>
+                variant="primary" >ADD</Button>
+            </Col>
           </Row>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <BootstrapTable
-              keyField="name"
-              data={this.state.meansLitTemp}
-              columns={columnsMeans}/>
+                keyField="name"
+                data={this.state.meansLitTemp}
+                columns={columnsMeans} />
             </Col>
           </Row>
         </container>
@@ -615,8 +615,8 @@ class SignInPage extends Component {
           </Row>
         </container>
 
-                  <br/>
-                  <br/>
+        <br />
+        <br />
 
 
 
@@ -631,7 +631,7 @@ class SignInPage extends Component {
 
       </div>
     );
-  } 
+  }
 }
 
 export default SignInPage
