@@ -90,7 +90,7 @@ class Learning extends Component {
           </Navbar.Collapse>
         </Navbar>
         {this.renderRedirect()};
-        <br/>
+        <br />
         <Container>
           <Row>
             <Col>
@@ -103,8 +103,8 @@ class Learning extends Component {
                   </p>
                 </Container>
               </Jumbotron>
-              <br/>
-              <br/>
+              <br />
+              <br />
               <BootstrapTable
                 keyField="_id"
                 data={this.state.items}
@@ -113,14 +113,14 @@ class Learning extends Component {
             </Col>
           </Row>
         </Container>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     );
   }
