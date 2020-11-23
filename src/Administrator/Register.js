@@ -107,7 +107,8 @@ class Register extends Component {
 
   render() {
     const columnsMeansPractice = [
-      { dataField: 'language', text: 'Lenguajes que desea practicar' }
+      { dataField: 'language', text: 'Lenguajes que desea practicar' },
+      { dataField: 'level', text: 'Nivel de dominio' }
     ];
     return (
       <div className="Register">
