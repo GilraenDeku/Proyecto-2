@@ -14,6 +14,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
 
 class Consulta3Page extends Component {
 
@@ -48,7 +49,15 @@ class Consulta3Page extends Component {
 
       resultadosFlag: false,
       resultadoJson: null,
-      resultado: []
+      resultado: [],
+
+      resultadoListaName: [],
+      nombreSelectDropdown: '',
+      edadSelectDropdown: '',
+      paisSelectDropdwn: '',
+      resultadoLenguajesLearn: [],
+      resultadoLenguajesTeach: []
+
 
     }
   }
@@ -120,18 +129,61 @@ class Consulta3Page extends Component {
 
   }
 
+  actualizarListaResultados(e, name) {
+    this.setState({
+      resultado: e,
+      resultadoListaName: name
+    })
+  }
+
+  getSelectName = (e) => {
+    this.setState({
+      nombreSelectDropdown: e
+    })
+    this.searchCountry(e)
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.resultadoJson.length; i++) {
+      if (this.state.resultadoJson[i].name == name) {
+        this.state.edadSelectDropdown = this.state.resultadoJson[i].age;
+        this.state.paisSelectDropdwn = this.state.resultadoJson[i].country;
+        this.actualizarLenguajes(this.state.resultadoJson[i].learn, this.state.resultadoJson[i].teach);
+      }
+      else {
+      }
+    }
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      resultadoLenguajesLearn: e,
+      resultadoLenguajesTeach: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.resultadoLenguajesLearn);
+    console.log('TEACH');
+    console.log(this.state.resultadoLenguajesTeach);
+  }
+
   creacionListaTabla = () => {
+    var temp = [];
+    var tempName = [];
     if (this.state.resultado.length === this.state.resultadoJson.length) {
 
     }
     else {
 
       for (let i = 0; i < this.state.resultadoJson.length; i++) {
-        this.state.resultado.push({
+        temp.push({
           'name': this.state.resultadoJson[i].name,
           'age': this.state.resultadoJson[i].age,
           'gender': this.state.resultadoJson[i].gender
         })
+        tempName.push(this.state.resultadoJson[i].name);
+        this.actualizarListaResultados(temp, tempName);
       }
 
     }
@@ -147,6 +199,11 @@ class Consulta3Page extends Component {
       { dataField: 'age', text: 'Edad' },
       { dataField: 'gender', text: 'Género' }
     ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
     this.state.temlistTeach = userInfo.teach;
     this.state.temlistLearn = userInfo.learn;
@@ -275,14 +332,82 @@ class Consulta3Page extends Component {
               </Col>
             </Row>
 
+            <br/>
+
             <Row>
               <Col sm="12" md={{ size: 6, offset: 0 }}>
-                <BootstrapTable
-                  keyField="name"
-                  data={this.state.resultado}
-                  columns={columnsRespuesta} />
+              <h3>Por favor seleccione el Usuario</h3>
+
+
+              {['Seleccione el Usuario'].map(
+                  (variant) => (
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={variant}
+                      id={`dropdown-variants-${variant}`}
+                      variant={variant.toLowerCase()}
+                      title={variant}
+                      onSelect={this.getSelectName}
+                    >
+                      {this.state.resultadoListaName.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                  ),
+                )}
+
+                
               </Col>
             </Row>
+
+            <br />
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Nombre: {this.state.nombreSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Edad: {this.state.edadSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Pais: {this.state.paisSelectDropdwn}</h4>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesLearn}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+            <br/>
+            <br/>
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea enseñar</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesTeach}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+
+
           </Container>
           <br />
           <br />
