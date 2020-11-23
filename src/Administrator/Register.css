@@ -1,6 +1,6 @@
 .Register {
     text-align: center;
-    background-image: url(../images/BackF.jpg);
+    background: linear-gradient(#ed7a1b,#1aa338, #ed7a1b);
 }
 
 .Container {
