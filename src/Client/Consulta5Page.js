@@ -6,24 +6,26 @@ import Col from 'react-bootstrap/Col';
 import Navbar from 'react-bootstrap/Navbar';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Nav from 'react-bootstrap/Nav';
-import { Redirect }                              from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import './WelcomeClient.css';
 import './Consulta5Page.css';
 import Badge from 'react-bootstrap/Badge';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import BootstrapTable                            from 'react-bootstrap-table-next';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 
 class Consulta5Page extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state ={ 
-      generalLanguage:[
-        {name: '',
-        count: ''}
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
       ],
       items: [],
       error: null,
@@ -40,7 +42,7 @@ class Consulta5Page extends Component {
       guardarLenguageLearn: [],
       languageTeach: '',
       languageLearn: '',
-      jsonFile:{
+      jsonFile: {
         learn: [],
         teach: [],
         country: '',
@@ -50,7 +52,7 @@ class Consulta5Page extends Component {
 
       resultadosFlag: false,
       resultadoJson: null,
-      resultado:[],
+      resultado: [],
 
 
 
@@ -62,16 +64,16 @@ class Consulta5Page extends Component {
 
 
       ageList: [
-        0,1,2,3,4,5,6,7,8,9,10,
-        11,12,13,14,15,16,17,18,19,20,
-        21,22,23,24,25,26,27,28,29,30,
-        31,32,33,34,35,36,37,38,39,40,
-        41,42,43,44,45,46,47,48,49,50,
-        51,52,53,54,55,56,57,58,59,60,
-        61,62,63,64,65,66,67,68,69,70,
-        71,72,73,74,75,76,77,78,79,80,
-        81,82,83,84,85,86,87,88,89,90,
-        91,92,93,94,95,96,97,98,99,100
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+        61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+        71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+        81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+        91, 92, 93, 94, 95, 96, 97, 98, 99, 100
       ],
       selectAgeMin: 0,
       selectAgeMax: 0,
@@ -80,7 +82,7 @@ class Consulta5Page extends Component {
     }
   }
 
-  clickPresionado = (event) =>{
+  clickPresionado = (event) => {
     this.setState({
       loginFlag: true
     })
@@ -123,37 +125,37 @@ class Consulta5Page extends Component {
   }
 
   clickAddLanguagelearn = () => {
-    if(this.state.guardarLenguageLearn.length === this.state.temlistLearn.length){
+    if (this.state.guardarLenguageLearn.length === this.state.temlistLearn.length) {
 
-    }else{
-      this.state.guardarLenguageLearn.push({'language': this.state.languageLearn});
+    } else {
+      this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
       this.state.jsonFile.learn.push(this.state.languageLearn);
     }
   }
 
 
   clickAddCountry = () => {
-    if(this.state.guardarCountry.length === 0){
-      this.state.guardarCountry.push({'country': this.state.selectCountry});
+    if (this.state.guardarCountry.length === 0) {
+      this.state.guardarCountry.push({ 'country': this.state.selectCountry });
       this.state.jsonFile.country = this.state.selectCountry;
-    }else{
-      if(this.state.guardarCountry.length === 1){
+    } else {
+      if (this.state.guardarCountry.length === 1) {
         this.state.guardarCountry.splice(0, 1);
-        this.state.guardarCountry.push({'country': this.state.selectCountry});
+        this.state.guardarCountry.push({ 'country': this.state.selectCountry });
         this.state.jsonFile.country = this.state.selectCountry;
       }
     }
   }
 
   clickAddAge = () => {
-    if(this.state.guardarAge.length === 0){
-      this.state.guardarAge.push({'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax});
+    if (this.state.guardarAge.length === 0) {
+      this.state.guardarAge.push({ 'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax });
       this.state.jsonFile.min = Number(this.state.selectAgeMin);
       this.state.jsonFile.max = Number(this.state.selectAgeMax);
-    }else{
-      if(this.state.guardarAge.length === 1){
+    } else {
+      if (this.state.guardarAge.length === 1) {
         this.state.guardarAge.splice(0, 1);
-        this.state.guardarAge.push({'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax});
+        this.state.guardarAge.push({ 'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax });
         this.state.jsonFile.min = Number(this.state.selectAgeMin);
         this.state.jsonFile.max = Number(this.state.selectAgeMax);
       }
@@ -161,10 +163,10 @@ class Consulta5Page extends Component {
   }
 
   clickAddLanguageteach = () => {
-    if(this.state.guardarLenguageTeach.length === this.state.temlistTeach.length){
+    if (this.state.guardarLenguageTeach.length === this.state.temlistTeach.length) {
 
-    }else{
-      this.state.guardarLenguageTeach.push({'language': this.state.languageTeach});
+    } else {
+      this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
       this.state.jsonFile.teach.push(this.state.languageTeach);
     }
   }
@@ -179,10 +181,10 @@ class Consulta5Page extends Component {
 
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.countryAttempt(response))
-    .catch(err => this.errorHandler(err))
+    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.countryAttempt(response))
+      .catch(err => this.errorHandler(err))
   }
 
   countryAttempt = (res) => {
@@ -198,9 +200,9 @@ class Consulta5Page extends Component {
     const url = `http://localhost:5000/people_learn_teach_country_age?continent=${userInfo.region}`;
 
     const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.state.jsonFile)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
     };
     const response = await fetch(url, requestOptions);
     const data = await response.json();
@@ -210,12 +212,12 @@ class Consulta5Page extends Component {
   }
 
   creacionListaTabla = () => {
-    if(this.state.resultado.length === this.state.resultadoJson.length){
+    if (this.state.resultado.length === this.state.resultadoJson.length) {
 
     }
-    else{
+    else {
 
-      for(let i = 0; i < this.state.resultadoJson.length; i++){
+      for (let i = 0; i < this.state.resultadoJson.length; i++) {
         this.state.resultado.push({
           'name': this.state.resultadoJson[i].name,
           'age': this.state.resultadoJson[i].age,
@@ -226,7 +228,7 @@ class Consulta5Page extends Component {
     }
   }
 
-  render () {
+  render() {
     const columnslanguage = [
       { dataField: 'language', text: 'Lenguaje Seleccionado' }
     ];
@@ -248,475 +250,412 @@ class Consulta5Page extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
     this.state.temlistTeach = userInfo.teach;
     this.state.temlistLearn = userInfo.learn;
-    if(this.state.resultadosFlag){
-      return (
-      <div className="Consulta5Page">
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                
-                <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
-                
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                
-                <Navbar.Collapse id="responsive-navbar-nav">
-
-                    <Nav className="mr-auto">
-                    <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
-                    <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
-                    <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
-                    <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
-                    <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
-                    <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
-                    </Nav>
-
-                </Navbar.Collapse>
-                </Navbar>
-                {this.renderRedirect()};
-                <Container>
-                  <Row>
-                    <Col>
-                    <Jumbotron fluid>
-                      <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
-                      <p>
-                      Buscar a otros interesados en practicar uno o más de los idiomas que la
-                      persona P puede enseñar y que estos puedan enseñar uno o más de los
-                      idiomas que la persona P desea practicar, además por el país de origen y
-                      un rango de edad.
-                      </p>
-                    </Jumbotron>
-                    </Col>
-                  </Row>
-                </Container>
-
-                <Container>
-                  <Row>
-
-
-                    <Col>
-                      <Row>
-                        <Col sm="12" md={{ size: 6, offset: 0 }}>
-                        <h3>
-                          <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
-                        </h3>
-                        </Col>
-                      </Row>
-                      <Row className="justify-content-md-center">
-                        <Col md="auto">
-                        <DropdownButton
-                          as={ButtonGroup}
-                          title={'Escoja Lenguaje Enseñar'}
-                          onSelect={this.clickSelectLanguageTeach}
-                        >
-                          {this.state.temlistTeach.map((catg) => (
-                          <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
-                        ))}
-                        </DropdownButton>
-                        <p>{this.state.languageTeach}</p>
-                        </Col>
-                        <Col md="auto">
-                          <Button onClick={this.clickAddLanguageteach}
-                          variant="primary" >Añadir</Button>
-                        </Col>
-                      </Row>
-                      <Row className="justify-content-md-center">
-                        <Col md="auto">
-                          <BootstrapTable
-                          keyField="language"
-                          data={this.state.guardarLenguageTeach}
-                          columns={columnslanguage}/>
-                        </Col>
-                      </Row>
-                    </Col>
-
-
-                    <Col>
-                      <Row>
-                        <Col sm="12" md={{ size: 6, offset: 0 }}>
-                        <h3>
-                          <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
-                        </h3>
-                        </Col>
-                      </Row>
-                      <Row className="justify-content-md-center">
-                        <Col md="auto">
-                        <DropdownButton
-                          as={ButtonGroup}
-                          title={'Escoja Lenguaje Practicar'}
-                          onSelect={this.clickSelectLanguageLearn}
-                        >
-                          {this.state.temlistLearn.map((catg) => (
-                          <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
-                        ))}
-                        </DropdownButton>
-                        <p>{this.state.languageLearn}</p>
-                        </Col>
-                        <Col md="auto">
-                          <Button onClick={this.clickAddLanguagelearn}
-                          variant="primary" >Añadir</Button>
-                        </Col>
-                      </Row>
-                      <Row className="justify-content-md-center">
-                        <Col md="auto">
-                          <BootstrapTable
-                          keyField="language"
-                          data={this.state.guardarLenguageLearn}
-                          columns={columnslanguage}/>
-                        </Col>
-                      </Row>
-                    </Col>
-
-
-
-
-                    <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el país de Origen</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Pais'}
-                            onSelect={this.clickSelectCountry}
-                          >
-                            {this.state.countryList.map((catg) => (
-                            <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectCountry}</p>
-                          </Col>
-                          <Col md="auto">
-                            <Button onClick={this.clickAddCountry}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="country"
-                            data={this.state.guardarCountry}
-                            columns={columnscountry}/>
-                          </Col>
-                        </Row>
-                      </Col>
-
-
-
-
-
-                      <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el Rango de edad</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Edad Mínima'}
-                            onSelect={this.clickSelectAgeMin}
-                          >
-                            {this.state.ageList.map((catg) => (
-                            <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectAgeMin}</p>
-                          </Col>
-
-
-
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Edad Máxima'}
-                            onSelect={this.clickSelectAgeMax}
-                          >
-                            {this.state.ageList.map((catg) => (
-                            <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectAgeMax}</p>
-                          </Col>
-
-
-                          <Col md="auto">
-                            <Button onClick={this.clickAddAge}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="min"
-                            data={this.state.guardarAge}
-                            columns={columnsAge}/>
-                          </Col>
-                        </Row>
-                      </Col>
-                  </Row>
-
-
-
-
-
-
-
-
-
-
-
-                  
-
-                  <Row>
-                    <Col sm="12" md={{ size: 6, offset: 0 }}>
-                      <h3>
-                        <Button onClick={this.clickRealizarBúsqueda}
-                        variant="primary" >Realizar Búsqueda</Button>
-                      </h3>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col sm="12" md={{ size: 6, offset: 0 }}>
-                    <BootstrapTable
-                          keyField="name"
-                          data={this.state.resultado}
-                          columns={columnsRespuesta}/>
-                    </Col>
-                  </Row>
-                </Container>
-                <br/>
-            <br/>
-            <br/>
-        </div>
-      );
-    }
-    else{
+    if (this.state.resultadosFlag) {
       return (
         <div className="Consulta5Page">
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                  
-                  <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
-                  
-                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                  
-                  <Navbar.Collapse id="responsive-navbar-nav">
-  
-                      <Nav className="mr-auto">
-                      <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
-                      <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
-                      <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
-                      <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
-                      <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
-                      <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
-                      </Nav>
-  
-                  </Navbar.Collapse>
-                  </Navbar>
-                  {this.renderRedirect()};
-                  <Container>
-                    <Row>
-                      <Col>
-                      <Jumbotron fluid>
-                        <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
-                        <p>
-                        Buscar a otros interesados en practicar uno o más de los idiomas que la
-                        persona P puede enseñar y que estos puedan enseñar uno o más de los
-                        idiomas que la persona P desea practicar, además por el país de origen y
-                        un rango de edad.
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen y
+                    un rango de edad.
+                      </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el Rango de edad</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Mínima'}
+                      onSelect={this.clickSelectAgeMin}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMin}</p>
+                  </Col>
+
+
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Máxima'}
+                      onSelect={this.clickSelectAgeMax}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMax}</p>
+                  </Col>
+
+
+                  <Col md="auto">
+                    <Button onClick={this.clickAddAge}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="min"
+                      data={this.state.guardarAge}
+                      columns={columnsAge} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <BootstrapTable
+                  keyField="name"
+                  data={this.state.resultado}
+                  columns={columnsRespuesta} />
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Consulta5Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen y
+                    un rango de edad.
                         </p>
-                      </Jumbotron>
-                      </Col>
-                    </Row>
-                  </Container>
-  
-                  <Container>
-                    <Row>
-  
-  
-                      <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Lenguaje Enseñar'}
-                            onSelect={this.clickSelectLanguageTeach}
-                          >
-                            {this.state.temlistTeach.map((catg) => (
-                            <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.languageTeach}</p>
-                          </Col>
-                          <Col md="auto">
-                            <Button onClick={this.clickAddLanguageteach}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="language"
-                            data={this.state.guardarLenguageTeach}
-                            columns={columnslanguage}/>
-                          </Col>
-                        </Row>
-                      </Col>
-  
-  
-                      <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Lenguaje Practicar'}
-                            onSelect={this.clickSelectLanguageLearn}
-                          >
-                            {this.state.temlistLearn.map((catg) => (
-                            <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.languageLearn}</p>
-                          </Col>
-                          <Col md="auto">
-                            <Button onClick={this.clickAddLanguagelearn}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="language"
-                            data={this.state.guardarLenguageLearn}
-                            columns={columnslanguage}/>
-                          </Col>
-                        </Row>
-                      </Col>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
 
 
-                      
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
 
 
-
-                      <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el país de Origen</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Pais'}
-                            onSelect={this.clickSelectCountry}
-                          >
-                            {this.state.countryList.map((catg) => (
-                            <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectCountry}</p>
-                          </Col>
-                          <Col md="auto">
-                            <Button onClick={this.clickAddCountry}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="country"
-                            data={this.state.guardarCountry}
-                            columns={columnscountry}/>
-                          </Col>
-                        </Row>
-                      </Col>
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
 
 
 
 
 
 
-
-
-
-
-                      <Col>
-                        <Row>
-                          <Col sm="12" md={{ size: 6, offset: 0 }}>
-                          <h3>
-                            <Badge variant="light">Seleccione el Rango de edad</Badge>
-                          </h3>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Edad Mínima'}
-                            onSelect={this.clickSelectAgeMin}
-                          >
-                            {this.state.ageList.map((catg) => (
-                            <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectAgeMin}</p>
-                          </Col>
-
-
-
-                          <Col md="auto">
-                          <DropdownButton
-                            as={ButtonGroup}
-                            title={'Escoja Edad Máxima'}
-                            onSelect={this.clickSelectAgeMax}
-                          >
-                            {this.state.ageList.map((catg) => (
-                            <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
-                          ))}
-                          </DropdownButton>
-                          <p>{this.state.selectAgeMax}</p>
-                          </Col>
-
-
-                          <Col md="auto">
-                            <Button onClick={this.clickAddAge}
-                            variant="primary" >Añadir</Button>
-                          </Col>
-                        </Row>
-                        <Row className="justify-content-md-center">
-                          <Col md="auto">
-                            <BootstrapTable
-                            keyField="country"
-                            data={this.state.guardarAge}
-                            columns={columnsAge}/>
-                          </Col>
-                        </Row>
-                      </Col>
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
 
 
 
@@ -727,26 +666,89 @@ class Consulta5Page extends Component {
 
 
 
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el Rango de edad</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Mínima'}
+                      onSelect={this.clickSelectAgeMin}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMin}</p>
+                  </Col>
 
 
-                    </Row>
-                    <Row>
-                    <Col sm="12" md={{ size: 6, offset: 0 }}>
-                      <h3>
-                        <Button onClick={this.clickRealizarBúsqueda}
-                        variant="primary" >Realizar Búsqueda</Button>
-                      </h3>
-                    </Col>
-                  </Row>
-                  </Container>
-                  <br/>
-            <br/>
-            <br/>
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Máxima'}
+                      onSelect={this.clickSelectAgeMax}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMax}</p>
+                  </Col>
+
+
+                  <Col md="auto">
+                    <Button onClick={this.clickAddAge}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarAge}
+                      columns={columnsAge} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+
+
+
+
+
+
+
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
         </div>
       );
     }
   }
-  
+
 }
 
-export default  Consulta5Page;
+export default Consulta5Page;
