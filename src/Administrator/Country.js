@@ -90,7 +90,7 @@ class Country extends Component {
           </Navbar.Collapse>
         </Navbar>
         {this.renderRedirect()};
-        <br/>
+        <br />
         <br />
         <Container>
           <Row>
@@ -102,7 +102,7 @@ class Country extends Component {
                   de cada país y la cantidad correspondiente.
                   </p>
               </Jumbotron>
-              <br/>
+              <br />
               <BootstrapTable
                 keyField="_id"
                 data={this.state.items}
