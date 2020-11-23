@@ -73,35 +73,38 @@ class Teaching extends Component {
       <div className="Teaching">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-          <Navbar.Brand href="./WelcomePage">Welcome</Navbar.Brand>
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
           <Navbar.Collapse id="responsive-navbar-nav">
 
             <Nav className="mr-auto">
-              <Nav.Link href="./Register">People Register</Nav.Link>
-              <Nav.Link href="./Country">People Register by Country</Nav.Link>
-              <Nav.Link href="./Teaching">People Register by Teaching Language</Nav.Link>
-              <Nav.Link href="./Learning">People Register by Learning Language</Nav.Link>
-              <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
             </Nav>
 
           </Navbar.Collapse>
         </Navbar>
         {this.renderRedirect()};
+        <br/>
         <Container>
           <Row>
             <Col>
               <Jumbotron fluid>
                 <Container>
-                  <h1>Teaching Language</h1>
+                  <h1>Personas registradas por lenguajes que enseñan</h1>
                   <p>
-                    See the number of registered users by language to teach. Show the
-                    language and the corresponding amount.
+                    Ver cantidad de usuarios registrados por idioma a enseñar. Mostrar el
+                    idioma y la cantidad correspondiente.
                   </p>
                 </Container>
               </Jumbotron>
+              <br/>
+              <br/>
               <BootstrapTable
                 keyField="_id"
                 data={this.state.items}
@@ -110,6 +113,14 @@ class Teaching extends Component {
             </Col>
           </Row>
         </Container>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
       </div>
     );
   }
