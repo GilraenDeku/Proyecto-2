@@ -107,45 +107,46 @@ class Register extends Component {
 
   render() {
     const columnsMeansPractice = [
-      { dataField: 'language', text: 'Languages to Practice' }
+      { dataField: 'language', text: 'Lenguajes que desea practicar' }
     ];
     return (
       <div className="Register">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-          <Navbar.Brand href="./WelcomePage">Welcome</Navbar.Brand>
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
           <Navbar.Collapse id="responsive-navbar-nav">
 
             <Nav className="mr-auto">
-              <Nav.Link href="./Register">People Register</Nav.Link>
-              <Nav.Link href="./Country">People Register by Country</Nav.Link>
-              <Nav.Link href="./Teaching">People Register by Teaching Language</Nav.Link>
-              <Nav.Link href="./Learning">People Register by Learning Language</Nav.Link>
-              <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
             </Nav>
 
           </Navbar.Collapse>
         </Navbar>
         {this.renderRedirect()};
+        <br />
         <Container>
           <Row>
             <Col>
               <Jumbotron fluid>
                 <Container>
-                  <h1>People Register</h1>
+                  <h1>Personas registradas</h1>
                   <p>
-                    See a list of all the people registered on the site. Must be
-                    show the person's name, their country of origin and the languages they
-                    want to practice
+                    Ver un listado de todas las personas registradas en el sitio. Se debe
+                    mostrar el nombre de la persona, su país de origen y los idiomas que
+                    desea practicar.
                   </p>
                 </Container>
               </Jumbotron>
-              <h3>Please Select your UserName</h3>
+              <h3>Por favor seleccione el Usuario</h3>
 
-              {['Select UserName'].map(
+              {['Seleccione el Usuario'].map(
                 (variant) => (
                   <DropdownButton
                     as={ButtonGroup}
@@ -164,10 +165,10 @@ class Register extends Component {
 
               <Row>
                 <Col>
-                  <h3>Name: {this.state.selectName}</h3>
+                  <h3>Nombre: {this.state.selectName}</h3>
                 </Col>
                 <Col>
-                  <h3>Country of Origin: {this.state.selectCounrty}</h3>
+                  <h3>País de Origen: {this.state.selectCounrty}</h3>
                 </Col>
               </Row>
 
@@ -179,6 +180,11 @@ class Register extends Component {
             </Col>
           </Row>
         </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     );
   }
