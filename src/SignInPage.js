@@ -109,7 +109,7 @@ class SignInPage extends Component {
   renderRedirect = () => {
     if (this.state.registerFlag) {
       console.log("Entra a registerFlag");
-      return <Redirect to='/WelcomePage' />
+      return <Redirect to='/IntroPage' />
     } else {
       if (this.state.goBackFlag) {
         return <Redirect to='/IntroPage' />
@@ -264,7 +264,8 @@ class SignInPage extends Component {
 
 
   registerNewUser = async (e) => {
-    const url = "http://localhost:5000/register?continent=AME";
+    alert('El usuario se registró correctamente');
+    const url = `http://localhost:5000/register?continent=${this.state.selectRegion}`;
 
     const requestOptions = {
       method: 'POST',
@@ -272,9 +273,6 @@ class SignInPage extends Component {
       body: JSON.stringify(this.state.jsonFile)
     };
     const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    //console.log(data); Preguntar a Kevin
-
   }
 
 
@@ -284,23 +282,51 @@ class SignInPage extends Component {
     //console.log(this.state.languageLearnlistaTemp);
     //console.log(this.state.hobbieListTemp);
 
-    this.setState({
-      registerFlag: true
-    })
-
-
-    this.state.jsonFile.name = this.state.inputName;
-    this.state.jsonFile.age = Number(this.state.selectAge);
-    this.state.jsonFile.gender = this.state.selectGender;
-    this.state.jsonFile.country = this.state.selectCountry;
-    this.state.jsonFile.learn = this.state.languageLearnlistaTemp;
-    this.state.jsonFile.teach = this.state.languageTeachlistTemp;
-    this.state.jsonFile.hobbies = this.state.hobbieListJson;
-    this.state.jsonFile.media = this.state.mediaListJson;
-
-    //console.log(this.state.jsonFile);
-
-    //this.registerNewUser();
+    if (this.state.inputName === '') {
+      alert('Please write your new name');
+    } else {
+      if (this.state.selectGender === '') {
+        alert('Please select your gender');
+      } else {
+        if (this.state.selectCountry === '') {
+          alert('Please select your Country');
+        } else {
+          if (this.state.languageLearnlistaTemp.length === 0) {
+            alert('Please select the language you want to learn');
+          } else {
+            if (this.state.languageTeachlistTemp.length === 0) {
+              alert('Please select the language you want to teach');
+            } else {
+              if (this.state.hobbieListJson.length === 0) {
+                alert('Please select your hobbie');
+              } else {
+                if (this.state.mediaListJson.length === 0) {
+                  alert('Please select your mean to practice');
+                } else {
+                  if (this.state.selectRegion === '') {
+                    alert('Please select the region');
+                  } else {
+                    this.setState({
+                      registerFlag: true
+                    })
+                    this.state.jsonFile.name = this.state.inputName;
+                    this.state.jsonFile.age = Number(this.state.selectAge);
+                    this.state.jsonFile.gender = this.state.selectGender;
+                    this.state.jsonFile.country = this.state.selectCountry;
+                    this.state.jsonFile.learn = this.state.languageLearnlistaTemp;
+                    this.state.jsonFile.teach = this.state.languageTeachlistTemp;
+                    this.state.jsonFile.hobbies = this.state.hobbieListJson;
+                    this.state.jsonFile.media = this.state.mediaListJson;
+                    console.log(this.state.jsonFile);
+                    this.registerNewUser();
+                  }
+                }
+              }
+            }
+          }
+        }//else country
+      }//else gender
+    }//else de name  
   }
 
   clickGoBackPresionado = () => {
@@ -330,16 +356,16 @@ class SignInPage extends Component {
 
   render() {
     const columnslanguajeLearn = [
-      { dataField: 'language', text: 'Languages to Learn' },
-      { dataField: 'level', text: 'Level of Knowledge' }
+      { dataField: 'language', text: 'Lenguajes para Aprender' },
+      { dataField: 'level', text: 'Nivel de Dominio' }
     ];
 
     const columnshobbie = [
-      { dataField: 'name', text: 'Selected Hobbie' }
+      { dataField: 'name', text: 'Hobbies selecionados' }
     ];
 
     const columnsMeans = [
-      { dataField: 'name', text: 'Selected Means to Practice' }
+      { dataField: 'name', text: 'Medios para comunicarse' }
     ];
     return (
       <div className='SignInPage'>
@@ -349,9 +375,9 @@ class SignInPage extends Component {
             <Col>
               <container>
                 <Jumbotron fluid>
-                  <h1>Register</h1>
+                  <h1>Registro</h1>
                   <p>
-                    Register as a new User
+                    Registrar un nuevo usuario
                     </p>
                 </Jumbotron>
               </container>
@@ -365,7 +391,7 @@ class SignInPage extends Component {
             <Col sm="12" md={{ size: 6, offset: 1 }}>
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroup-sizing-default">Name</InputGroup.Text>
+                  <InputGroup.Text id="inputGroup-sizing-default">Nombre</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
                   aria-label="Name"
@@ -377,7 +403,7 @@ class SignInPage extends Component {
             <Col>
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Age'}
+                title={'Seleccione su edad'}
                 onSelect={this.clickSelectAge}
               >
                 {this.state.ageList.map((catg) => (
@@ -391,7 +417,7 @@ class SignInPage extends Component {
             <Col sm="12" md={{ size: 6, offset: 1 }}>
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Gender'}
+                title={'Seleccione su género'}
                 onSelect={this.clickSelectGender}
               >
                 <Dropdown.Item eventKey="F">Female</Dropdown.Item>
@@ -403,7 +429,7 @@ class SignInPage extends Component {
             <Col>
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Country'}
+                title={'Seleccione su país de origen'}
                 onSelect={this.clickSelectCountry}
               >
                 {this.state.countryList.map((catg) => (
@@ -415,6 +441,9 @@ class SignInPage extends Component {
           </Row>
         </container>
 
+        <br />
+        <br />
+
 
         {/*
           Selección de lenguaje Aprender
@@ -422,13 +451,13 @@ class SignInPage extends Component {
 
         <container>
           <h3>
-            <Badge variant="light">Select your language to learn</Badge>
+            <Badge variant="light">Seleccione sus lenguajes que desea aprender</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Language'}
+                title={'Seleccione sus lenguajes'}
                 onSelect={this.clickSelectLanguageLearn}
               >
                 {this.state.languagelistGet.map((catg) => (
@@ -440,7 +469,7 @@ class SignInPage extends Component {
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Level'}
+                title={'Seleccione el nivel de dominio'}
                 onSelect={this.clickSelectLevelLearn}
               >
                 {this.state.levellistGet.map((catg) => (
@@ -451,7 +480,7 @@ class SignInPage extends Component {
             </Col>
             <Col md="auto">
               <Button onClick={this.clickAddLearnPresionado}
-                variant="primary" >ADD</Button>
+                variant="primary" >Añadir</Button>
             </Col>
           </Row>
           <Row className="justify-content-md-center">
@@ -472,18 +501,21 @@ class SignInPage extends Component {
         */}
 
 
+        <br />
+        <br />
+
 
 
 
         <container>
           <h3>
-            <Badge variant="light">Select your language to teach</Badge>
+            <Badge variant="light">Seleccione sus lenguajes para enseñar</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Language'}
+                title={'Seleccione sus lenguajes'}
                 onSelect={this.clickSelectLanguageTeach}
               >
                 {this.state.languagelistGet.map((catg) => (
@@ -495,7 +527,7 @@ class SignInPage extends Component {
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Level'}
+                title={'Seleccione el nivel de dominio'}
                 onSelect={this.clickSelectLevelTeach}
               >
                 {this.state.levellistGet.map((catg) => (
@@ -506,7 +538,7 @@ class SignInPage extends Component {
             </Col>
             <Col md="auto">
               <Button onClick={this.clickAddTeachPresionado}
-                variant="primary" >ADD</Button>
+                variant="primary" >Añadir</Button>
             </Col>
           </Row>
           <Row className="justify-content-md-center">
@@ -526,17 +558,18 @@ class SignInPage extends Component {
           Selección de Hobbie
         */}
 
-
+        <br />
+        <br />
 
         <container>
           <h3>
-            <Badge variant="light">Select your Hobbie</Badge>
+            <Badge variant="light">Seleccione sus hobbies</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Hobbie'}
+                title={'Seleccione sus hobbies'}
                 onSelect={this.clickSelectHobbie}
               >
                 {this.state.hobbieList.map((catg) => (
@@ -547,7 +580,7 @@ class SignInPage extends Component {
             </Col>
             <Col md="auto">
               <Button onClick={this.clickAddHobbie}
-                variant="primary" >ADD</Button>
+                variant="primary" >Añadir</Button>
             </Col>
           </Row>
           <Row className="justify-content-md-center">
@@ -571,18 +604,19 @@ class SignInPage extends Component {
 
 
 
-
+        <br />
+        <br />
 
 
         <container>
           <h3>
-            <Badge variant="light">Select your Mean to practice</Badge>
+            <Badge variant="light">Seleccione los medios que desea usar para practicar</Badge>
           </h3>
           <Row className="justify-content-md-center">
             <Col md="auto">
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Mean to Practice'}
+                title={'Seleccione los medios'}
                 onSelect={this.clickSelectMean}
               >
                 {this.state.meansList.map((catg) => (
@@ -593,7 +627,7 @@ class SignInPage extends Component {
             </Col>
             <Col md="auto">
               <Button onClick={this.clickAddMean}
-                variant="primary" >ADD</Button>
+                variant="primary" >Añadir</Button>
             </Col>
           </Row>
           <Row className="justify-content-md-center">
@@ -606,11 +640,34 @@ class SignInPage extends Component {
           </Row>
         </container>
 
+        <br />
+        <br />
+
+        <container>
+          <Row>
+            <Col>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione la Región'}
+                onSelect={this.clickSelectEstado}
+              >
+                <Dropdown.Item eventKey="AME">America</Dropdown.Item>
+                <Dropdown.Item eventKey="EUR">Europe</Dropdown.Item>
+                <Dropdown.Item eventKey="ASI">Asia</Dropdown.Item>
+              </DropdownButton>
+              <p>{this.state.selectRegion}</p>
+            </Col>
+          </Row>
+        </container>
+
+        <br />
+        <br />
+
         <container>
           <Row className="justify-content-md-center">
             <Col md="auto">
-              <Button variant="primary" onClick={this.clickRegisterPresionado}>Register</Button>
-              <Button variant="primary" onClick={this.clickGoBackPresionado}>Go Back</Button>
+              <Button variant="primary" onClick={this.clickRegisterPresionado}>Registrarse</Button>
+              <Button variant="primary" onClick={this.clickGoBackPresionado}>Regresar</Button>
             </Col>
           </Row>
         </container>
