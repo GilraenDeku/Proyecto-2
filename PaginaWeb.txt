@@ -1,0 +1,5383 @@
+/*
+
+INTRO PAGE
+
+*/
+
+
+import React, { Component } from 'react';
+import { Button, Row, Col, Container } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
+import { Image, InputGroup, FormControl } from 'react-bootstrap';
+import logo from './images/logo.png';
+import './IntroPage.css';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
+
+class IntroPage extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      loginFlag: false,
+      clientFlag: false,
+      items: [],
+      selectRegion: '',
+      inputName: '',
+      inputPassword: '',
+      jsonFile: {
+        name: '',
+        age: 0,
+        gender: '',
+        country: '',
+        learn: [],
+        tearn: [],
+        hobbies: [],
+        media: [],
+        signinFlag: false
+      },
+      jsonLocalStorage: {
+        name: '',
+        learn: null,
+        teach: null,
+        region: ''
+      }
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/WelcomePage' />
+    } else {
+      if (this.state.signinFlag) {
+        return <Redirect to='/SignInPage' />
+      } else {
+        if (this.state.clientFlag) {
+          return <Redirect to='/WelcomeClient' />
+        }
+      }
+    }
+  }
+
+  createJsonLocalStorage(name) {
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
+        this.state.jsonLocalStorage.name = name;
+        this.state.jsonLocalStorage.learn = this.state.items[i].learn;
+        this.state.jsonLocalStorage.teach = this.state.items[i].teach;
+        this.state.jsonLocalStorage.region = this.state.selectRegion;
+        console.log(this.state.jsonLocalStorage);
+      }
+      else {
+      }
+    }
+  }
+
+  createJsonLocalStorageAdmin() {
+    this.state.jsonLocalStorage.region = this.state.selectRegion;
+  }
+
+
+  writeJson = () => {
+
+    const newlanguage = 'Dayanna';
+
+    const newlevel = '1234';
+
+    this.state.jsonFile.learn.push({ "language": newlanguage, "level": newlevel });
+
+    //console.log(this.state.jsonFile);
+
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      signinFlag: true
+    })
+  }
+
+  inputPresionadoName = (event) => {
+    this.setState({
+      inputName: event.target.value
+    })
+  }
+
+  inputPresionadoPassword = (event) => {
+    this.setState({
+      inputPassword: event.target.value
+    })
+  }
+
+  loginAttempt = (res) => {
+    this.setState({
+      items: res
+    })
+  }
+
+  clickSelectEstado = (res) => {
+    this.setState({
+      selectRegion: res
+    })
+  }
+
+  clickLogInPresionado = () => {
+    var res = false;
+    if (this.state.inputName === '') {
+      alert('Please write your UserName');
+    } else {
+      if (this.state.inputPassword === '') {
+        alert('Please write your Password');
+      } else {
+        if (this.state.selectRegion === '') {
+          alert('Please select your Region');
+        } else {
+          res = this.searchCountry(this.state.inputName);
+          if (res) {
+            this.setState({
+              clientFlag: true
+            })
+          } else {
+            if (this.state.inputName === 'Admin') {
+              this.createJsonLocalStorageAdmin();
+              this.setState({
+                loginFlag: true
+              })
+            }
+            else {
+              alert('UserName or Password is incorrect');
+            }
+          }
+        }
+      }
+    }
+  }
+
+  searchCountry(name) {
+    var flag = false;
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
+        flag = true
+        this.createJsonLocalStorage(name);
+      }
+      else {
+      }
+    }
+    return (flag);
+  }
+
+  render() {
+    localStorage.clear();
+
+    if (!localStorage.getItem('user_info')) {
+      localStorage.setItem('user_info', '');
+    }
+
+
+    localStorage.setItem('user_info', JSON.stringify(this.state.jsonLocalStorage));
+
+    return (
+      <div className='IntroPage'>
+        {this.renderRedirect()}
+        <br />
+        <br />
+        <br />
+
+        <h1>PROYECTO #2</h1>
+
+        <br />
+
+        <Image src={logo} fluid />
+
+        <br />
+        <br />
+
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <InputGroup className="mb-3">
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroup-sizing-default">Nombre</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  aria-label="Name"
+                  aria-describedby="inputGroup-sizing-default"
+                  onChange={this.inputPresionadoName}
+                />
+              </InputGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 3 }}>
+              <InputGroup className="mb-3">
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroup-sizing-default">Contraseña</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  type="password"
+                  aria-label="Password"
+                  aria-describedby="inputGroup-sizing-default"
+                  onChange={this.inputPresionadoPassword}
+                />
+              </InputGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione la región'}
+                onSelect={this.clickSelectEstado}
+              >
+                <Dropdown.Item eventKey="AME">America</Dropdown.Item>
+                <Dropdown.Item eventKey="EUR">Europe</Dropdown.Item>
+                <Dropdown.Item eventKey="ASI">Asia</Dropdown.Item>
+              </DropdownButton>
+              <p>{this.state.selectRegion}</p>
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <Button variant="primary" onClick={this.clickLogInPresionado}>Ingresar</Button>
+              <Button variant="primary" onClick={this.clickPresionado}>Registrar</Button>
+            </Col>
+          </Row>
+        </Container>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+}
+
+export default IntroPage
+
+
+/*
+
+INTRO PAGE CSS
+
+*/
+
+
+.IntroPage {
+  text-align: center;
+  margin-bottom: auto;
+  margin-left: auto;
+  background-image: url(./images/LogInFondo.jpg);
+}
+
+.Container {
+  border: 5px solid gray;
+}
+
+
+/*
+
+SIGNINPAGE
+
+*/
+
+import React, { Component } from 'react';
+import { Button, Row, Col, Container } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
+import { Image, InputGroup, FormControl } from 'react-bootstrap';
+import './SignInPage.css';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Badge from 'react-bootstrap/Badge';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+
+
+class SignInPage extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      registerFlag: false,
+      goBackFlag: false,
+      items: [],
+      selectRegion: '',
+      inputName: '',
+      inputPassword: '',
+      countryList: [],
+      selectCountry: '',
+      ageList: [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+        61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+        71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+        81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+        91, 92, 93, 94, 95, 96, 97, 98, 99, 100
+      ],
+      selectGender: '',
+      showGender: '',
+      selectAge: 0,
+      jsonFile: {
+        name: '',
+        age: 0,
+        gender: '',
+        country: '',
+        learn: null,
+        teach: null,
+        hobbies: null,
+        media: null
+      },
+      languagelistGet: [],
+      selectLanguageLearn: '',
+      selectLevelLearn: '',
+      levellistGet: [],
+      languageLearnlistaTemp: [],
+
+      selectLanguageTeach: '',
+      selectLevelTeach: '',
+      languageTeachlistTemp: [],
+
+      selectHobbie: '',
+      hobbieListTemp: [],
+      hobbieListJson: [],
+      hobbieList: [],
+
+      selectMeans: '',
+      meansLitTemp: [],
+      mediaListJson: [],
+      meansList: [],
+
+      languageLearnJson: []
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=country`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.countryAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=language`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.languageAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=level`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.levelAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.hobbieAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+    fetch(`http://localhost:5000/get?continent=EUR&collection=media`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.meansAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+
+
+  }
+
+  renderRedirect = () => {
+    if (this.state.registerFlag) {
+      console.log("Entra a registerFlag");
+      return <Redirect to='/IntroPage' />
+    } else {
+      if (this.state.goBackFlag) {
+        return <Redirect to='/IntroPage' />
+      }
+    }
+  }
+
+
+  writeJson = () => {
+
+    const newlanguage = 'Dayanna';
+
+    const newlevel = '1234';
+
+    this.state.jsonFile.learn.push({ "language": newlanguage, "level": newlevel });
+
+  }
+
+  clickAddLearnPresionado = (event) => {
+    this.state.languageLearnlistaTemp.push({ "language": this.state.selectLanguageLearn, "level": this.state.selectLevelLearn });
+  }
+
+  clickAddTeachPresionado = (event) => {
+    this.state.languageTeachlistTemp.push({ "language": this.state.selectLanguageTeach, "level": this.state.selectLevelTeach });
+  }
+
+  clickAddHobbie = (event) => {
+    this.state.hobbieListTemp.push({ "name": this.state.selectHobbie });
+    this.state.hobbieListJson.push(this.state.selectHobbie);
+  }
+
+  clickAddMean = (event) => {
+    this.state.meansLitTemp.push({ "name": this.state.selectMeans });
+    this.state.mediaListJson.push(this.state.selectMeans);
+  }
+
+  inputPresionadoName = (event) => {
+    this.setState({
+      inputName: event.target.value
+    })
+  }
+
+  inputPresionadoPassword = (event) => {
+    this.setState({
+      inputPassword: event.target.value
+    })
+  }
+
+  countryAttempt = (res) => {
+    this.setState({
+      countryList: res
+    })
+  }
+
+  languageAttempt = (res) => {
+
+    this.setState({
+      languagelistGet: res
+    })
+  }
+
+  levelAttempt = (res) => {
+    this.setState({
+      levellistGet: res
+    })
+  }
+
+  hobbieAttempt = (res) => {
+    this.setState({
+      hobbieList: res
+    })
+  }
+
+  meansAttempt = (res) => {
+    this.setState({
+      meansList: res
+    })
+  }
+
+  clickSelectEstado = (res) => {
+    this.setState({
+      selectRegion: res
+    })
+  }
+
+  clickSelectAge = (res) => {
+    this.setState({
+      selectAge: res
+    })
+  }
+
+  clickSelectGender = (res) => {
+
+    this.setState({
+      selectGender: res
+    })
+
+    if (res === 'F') {
+      this.setState({
+        showGender: 'Female'
+      })
+    } else {
+      if (res === 'M') {
+        this.setState({
+          showGender: 'Male'
+        })
+      } else {
+        if (res === 'I') {
+          this.setState({
+            showGender: 'Undefined'
+          })
+        }
+      }
+    }
+  }
+
+  clickSelectCountry = (res) => {
+    this.setState({
+      selectCountry: res
+    })
+  }
+
+  clickSelectLanguageLearn = (res) => {
+    this.setState({
+      selectLanguageLearn: res
+    })
+  }
+
+  clickSelectLanguageTeach = (res) => {
+    this.setState({
+      selectLanguageTeach: res
+    })
+  }
+
+  clickSelectHobbie = (res) => {
+    this.setState({
+      selectHobbie: res
+    })
+  }
+
+  clickSelectLevelLearn = (res) => {
+    this.setState({
+      selectLevelLearn: res
+    })
+  }
+
+  clickSelectMean = (res) => {
+    this.setState({
+      selectMeans: res
+    })
+  }
+
+
+  registerNewUser = async (e) => {
+    alert('El usuario se registró correctamente');
+    const url = `http://localhost:5000/register?continent=${this.state.selectRegion}`;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+    const response = await fetch(url, requestOptions);
+  }
+
+
+
+  clickRegisterPresionado = () => {
+
+    //console.log(this.state.languageLearnlistaTemp);
+    //console.log(this.state.hobbieListTemp);
+
+    if (this.state.inputName === '') {
+      alert('Please write your new name');
+    } else {
+      if (this.state.selectGender === '') {
+        alert('Please select your gender');
+      } else {
+        if (this.state.selectCountry === '') {
+          alert('Please select your Country');
+        } else {
+          if (this.state.languageLearnlistaTemp.length === 0) {
+            alert('Please select the language you want to learn');
+          } else {
+            if (this.state.languageTeachlistTemp.length === 0) {
+              alert('Please select the language you want to teach');
+            } else {
+              if (this.state.hobbieListJson.length === 0) {
+                alert('Please select your hobbie');
+              } else {
+                if (this.state.mediaListJson.length === 0) {
+                  alert('Please select your mean to practice');
+                } else {
+                  if (this.state.selectRegion === '') {
+                    alert('Please select the region');
+                  } else {
+                    this.setState({
+                      registerFlag: true
+                    })
+                    this.state.jsonFile.name = this.state.inputName;
+                    this.state.jsonFile.age = Number(this.state.selectAge);
+                    this.state.jsonFile.gender = this.state.selectGender;
+                    this.state.jsonFile.country = this.state.selectCountry;
+                    this.state.jsonFile.learn = this.state.languageLearnlistaTemp;
+                    this.state.jsonFile.teach = this.state.languageTeachlistTemp;
+                    this.state.jsonFile.hobbies = this.state.hobbieListJson;
+                    this.state.jsonFile.media = this.state.mediaListJson;
+                    console.log(this.state.jsonFile);
+                    this.registerNewUser();
+                  }
+                }
+              }
+            }
+          }
+        }//else country
+      }//else gender
+    }//else de name  
+  }
+
+  clickGoBackPresionado = () => {
+    this.setState({
+      goBackFlag: true
+    })
+  }
+
+  clickSelectLevelTeach = (res) => {
+    this.setState({
+      selectLevelTeach: res
+    })
+  }
+
+
+  searchCountry(name) {
+    var flag = false;
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
+        flag = true
+      }
+      else {
+      }
+    }
+    return (flag);
+  }
+
+  render() {
+    const columnslanguajeLearn = [
+      { dataField: 'language', text: 'Lenguajes para Aprender' },
+      { dataField: 'level', text: 'Nivel de Dominio' }
+    ];
+
+    const columnshobbie = [
+      { dataField: 'name', text: 'Hobbies selecionados' }
+    ];
+
+    const columnsMeans = [
+      { dataField: 'name', text: 'Medios para comunicarse' }
+    ];
+    return (
+      <div className='SignInPage'>
+        {this.renderRedirect()}
+        <container>
+          <Row>
+            <Col>
+              <container>
+                <Jumbotron fluid>
+                  <h1>Registro</h1>
+                  <p>
+                    Registrar un nuevo usuario
+                    </p>
+                </Jumbotron>
+              </container>
+            </Col>
+          </Row>
+
+          {/*
+          Selección de nombre, edad, género y pais de Origen
+          */}
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 1 }}>
+              <InputGroup className="mb-3">
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroup-sizing-default">Nombre</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  aria-label="Name"
+                  aria-describedby="inputGroup-sizing-default"
+                  onChange={this.inputPresionadoName}
+                />
+              </InputGroup>
+            </Col>
+            <Col>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione su edad'}
+                onSelect={this.clickSelectAge}
+              >
+                {this.state.ageList.map((catg) => (
+                  <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectAge}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 1 }}>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione su género'}
+                onSelect={this.clickSelectGender}
+              >
+                <Dropdown.Item eventKey="F">Female</Dropdown.Item>
+                <Dropdown.Item eventKey="M">Male</Dropdown.Item>
+                <Dropdown.Item eventKey="I">Undefined</Dropdown.Item>
+              </DropdownButton>
+              <p>{this.state.showGender}</p>
+            </Col>
+            <Col>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione su país de origen'}
+                onSelect={this.clickSelectCountry}
+              >
+                {this.state.countryList.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectCountry}</p>
+            </Col>
+          </Row>
+        </container>
+
+        <br />
+        <br />
+
+
+        {/*
+          Selección de lenguaje Aprender
+        */}
+
+        <container>
+          <h3>
+            <Badge variant="light">Seleccione sus lenguajes que desea aprender</Badge>
+          </h3>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione sus lenguajes'}
+                onSelect={this.clickSelectLanguageLearn}
+              >
+                {this.state.languagelistGet.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectLanguageLearn}</p>
+            </Col>
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione el nivel de dominio'}
+                onSelect={this.clickSelectLevelLearn}
+              >
+                {this.state.levellistGet.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectLevelLearn}</p>
+            </Col>
+            <Col md="auto">
+              <Button onClick={this.clickAddLearnPresionado}
+                variant="primary" >Añadir</Button>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <BootstrapTable
+                keyField="language"
+                data={this.state.languageLearnlistaTemp}
+                columns={columnslanguajeLearn} />
+            </Col>
+          </Row>
+        </container>
+
+
+
+
+        {/*
+          Selección de lenguaje Enseñar
+        */}
+
+
+        <br />
+        <br />
+
+
+
+
+        <container>
+          <h3>
+            <Badge variant="light">Seleccione sus lenguajes para enseñar</Badge>
+          </h3>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione sus lenguajes'}
+                onSelect={this.clickSelectLanguageTeach}
+              >
+                {this.state.languagelistGet.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectLanguageTeach}</p>
+            </Col>
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione el nivel de dominio'}
+                onSelect={this.clickSelectLevelTeach}
+              >
+                {this.state.levellistGet.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectLevelTeach}</p>
+            </Col>
+            <Col md="auto">
+              <Button onClick={this.clickAddTeachPresionado}
+                variant="primary" >Añadir</Button>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <BootstrapTable
+                keyField="language"
+                data={this.state.languageTeachlistTemp}
+                columns={columnslanguajeLearn} />
+            </Col>
+          </Row>
+        </container>
+
+
+
+
+        {/*
+          Selección de Hobbie
+        */}
+
+        <br />
+        <br />
+
+        <container>
+          <h3>
+            <Badge variant="light">Seleccione sus hobbies</Badge>
+          </h3>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione sus hobbies'}
+                onSelect={this.clickSelectHobbie}
+              >
+                {this.state.hobbieList.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectHobbie}</p>
+            </Col>
+            <Col md="auto">
+              <Button onClick={this.clickAddHobbie}
+                variant="primary" >Añadir</Button>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <BootstrapTable
+                keyField="name"
+                data={this.state.hobbieListTemp}
+                columns={columnshobbie} />
+            </Col>
+          </Row>
+        </container>
+
+
+
+
+
+        {/*
+          Selección de Medios para enseñar
+        */}
+
+
+
+
+        <br />
+        <br />
+
+
+        <container>
+          <h3>
+            <Badge variant="light">Seleccione los medios que desea usar para practicar</Badge>
+          </h3>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione los medios'}
+                onSelect={this.clickSelectMean}
+              >
+                {this.state.meansList.map((catg) => (
+                  <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                ))}
+              </DropdownButton>
+              <p>{this.state.selectMeans}</p>
+            </Col>
+            <Col md="auto">
+              <Button onClick={this.clickAddMean}
+                variant="primary" >Añadir</Button>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <BootstrapTable
+                keyField="name"
+                data={this.state.meansLitTemp}
+                columns={columnsMeans} />
+            </Col>
+          </Row>
+        </container>
+
+        <br />
+        <br />
+
+        <container>
+          <Row>
+            <Col>
+              <DropdownButton
+                as={ButtonGroup}
+                title={'Seleccione la Región'}
+                onSelect={this.clickSelectEstado}
+              >
+                <Dropdown.Item eventKey="AME">America</Dropdown.Item>
+                <Dropdown.Item eventKey="EUR">Europe</Dropdown.Item>
+                <Dropdown.Item eventKey="ASI">Asia</Dropdown.Item>
+              </DropdownButton>
+              <p>{this.state.selectRegion}</p>
+            </Col>
+          </Row>
+        </container>
+
+        <br />
+        <br />
+
+        <container>
+          <Row className="justify-content-md-center">
+            <Col md="auto">
+              <Button variant="primary" onClick={this.clickRegisterPresionado}>Registrarse</Button>
+              <Button variant="primary" onClick={this.clickGoBackPresionado}>Regresar</Button>
+            </Col>
+          </Row>
+        </container>
+
+        <br />
+        <br />
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    );
+  }
+}
+
+export default SignInPage
+
+
+/*
+
+SIGNINPAGE CSS
+
+*/
+
+.SignInPage {
+    text-align: center;
+    background: linear-gradient(#0084ff, #ffc000, #0084ff);
+}
+
+.dropdown-menu {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.Container {
+    text-align: center;
+}
+
+
+/*
+
+APP
+
+*/
+
+
+
+import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+} from "react-router-dom";
+import Register from './Administrator/Register';
+import Country from './Administrator/Country';
+import Learning from './Administrator/Learning';
+import Teaching from './Administrator/Teaching';
+import WelcomePage from './Administrator/WelcomePage';
+import SignInPage from './SignInPage';
+import IntroPage from './IntroPage';
+import WelcomeClient from './Client/WelcomeClient';
+import Consulta1Page from './Client/Consulta1Page';
+import Consulta2Page from './Client/Consulta2Page';
+import Consulta3Page from './Client/Consulta3Page';
+import Consulta4Page from './Client/Consulta4Page';
+import Consulta5Page from './Client/Consulta5Page';
+
+function App() {
+  return (
+      <Router>
+        <Switch>
+            <Route path="/Register">
+                <Register />
+            </Route>
+            <Route path="/Country">
+                <Country />
+            </Route>
+            <Route path="/Learning">
+                <Learning />
+            </Route>
+            <Route path="/Teaching">
+                <Teaching />
+            </Route>
+            <Route path="/WelcomePage">
+                <WelcomePage />
+            </Route>
+            <Route path="/WelcomeClient">
+                <WelcomeClient />
+            </Route>
+            <Route path="/Consulta1Page">
+                <Consulta1Page />
+            </Route>
+            <Route path="/Consulta2Page">
+                <Consulta2Page />
+            </Route>
+            <Route path="/Consulta3Page">
+                <Consulta3Page />
+            </Route>
+            <Route path="/Consulta4Page">
+                <Consulta4Page />
+            </Route>
+            <Route path="/Consulta5Page">
+                <Consulta5Page />
+            </Route>
+            <Route path="/SignInPage">
+                <SignInPage />
+            </Route>
+            <Route path="/">
+                <IntroPage />
+            </Route>
+            <Route path="/IntroPage">
+                <IntroPage />
+            </Route>
+        </Switch>
+      </Router>
+  );
+}
+
+export default App;
+
+
+
+
+/*
+
+APP CSS
+
+*/
+
+
+
+.App {
+  text-align: center;
+  position: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/*
+
+ADMINISTRADOR 
+
+*/
+
+
+/*
+
+COUNTRY
+
+*/
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import './Country.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+
+
+
+class Country extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(`http://localhost:5000/people_by_country?continent=${userInfo.region}`);
+
+    await fetch(`http://localhost:5000/people_by_country?continent=${userInfo.region}`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  loginAttempt = (res) => {
+
+    this.setState({
+      items: res
+    })
+
+    console.log(this.state.items);
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  render() {
+    const columnsMeansPractice = [
+      { dataField: '_id', text: 'Pais' },
+      { dataField: 'count', text: 'Cantidad de personas' }
+    ];
+    return (
+      <div className="Country">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <br />
+        <br />
+        <Container>
+          <Row>
+            <Col>
+              <Jumbotron fluid>
+                <h1>Personas registradas por país</h1>
+                <p>
+                  Ver cantidad de usuarios registrados por país de origen. Mostrar el nombre
+                  de cada país y la cantidad correspondiente.
+                  </p>
+              </Jumbotron>
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.items}
+                columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+        </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+
+}
+
+export default Country;
+
+/*
+
+COUNTRY CSS
+
+*/
+
+
+.Country {
+    text-align: center;
+    background: linear-gradient(#ed7a1b, #0084ff);
+    background-size: cover;
+}
+
+.Container {
+    text-align: center;
+}
+
+
+/*
+
+LEARNING
+
+*/
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import './Learning.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+
+
+
+class Learning extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`);
+
+    await fetch(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  loginAttempt = (res) => {
+
+    this.setState({
+      items: res
+    })
+
+    console.log(this.state.items);
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  render() {
+    const columnsMeansPractice = [
+      { dataField: '_id', text: 'Lenguaje' },
+      { dataField: 'count', text: 'Cantidad de personas' }
+    ];
+    return (
+      <div className="Learning">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <br />
+        <Container>
+          <Row>
+            <Col>
+              <Jumbotron fluid>
+                <Container>
+                  <h1>Personas registradas por lenguajes que aprenden</h1>
+                  <p>
+                    Ver cantidad de usuarios registrados por idioma a aprender. Mostrar el
+                    idioma y la cantidad correspondiente.
+                  </p>
+                </Container>
+              </Jumbotron>
+              <br />
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.items}
+                columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+        </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+
+}
+
+export default Learning;
+
+
+/*
+
+LEARNING CSS
+
+*/
+
+
+
+.Learning {
+    text-align: center;
+    background: linear-gradient(#ed7a1b, #ffc000);
+}
+
+
+
+/*
+
+REGISTER
+
+*/
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import './Register.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+
+
+
+
+class Register extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      nameList: [],
+      countryList: [],
+      lenguajesList: [],
+      selectName: '',
+      selectCounrty: '',
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`);
+
+    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  loginAttempt = (res) => {
+    this.setState({
+      items: res
+    })
+  }
+
+  setListName = () => {
+    var testlist = [];
+    for (let i = 0; i < this.state.items.length; i++) {
+      testlist.push(this.state.items[i].name);
+    }
+  }
+
+  getSelectName = (e) => {
+    /*
+    this.setState({
+      selectName: e
+    })
+    */
+    this.searchCountry(e);
+  }
+
+  updateStates = (newC, newN, newL) => {
+    this.setState({
+      selectCounrty: newC,
+      selectName: newN,
+      lenguajesList: newL
+    })
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name == name) {
+        this.updateStates(this.state.items[i].country, name, this.state.items[i].learn);
+      }
+      else {
+      }
+    }
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  render() {
+    const columnsMeansPractice = [
+      { dataField: 'language', text: 'Lenguajes que desea practicar' },
+      { dataField: 'level', text: 'Nivel de dominio' }
+    ];
+    return (
+      <div className="Register">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <br />
+        <Container>
+          <Row>
+            <Col>
+              <Jumbotron fluid>
+                <Container>
+                  <h1>Personas registradas</h1>
+                  <p>
+                    Ver un listado de todas las personas registradas en el sitio. Se debe
+                    mostrar el nombre de la persona, su país de origen y los idiomas que
+                    desea practicar.
+                  </p>
+                </Container>
+              </Jumbotron>
+              <h3>Por favor seleccione el Usuario</h3>
+
+              {['Seleccione el Usuario'].map(
+                (variant) => (
+                  <DropdownButton
+                    as={ButtonGroup}
+                    key={variant}
+                    id={`dropdown-variants-${variant}`}
+                    variant={variant.toLowerCase()}
+                    title={variant}
+                    onSelect={this.getSelectName}
+                  >
+                    {this.state.items.map((catg) => (
+                      <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                    ))}
+                  </DropdownButton>
+                ),
+              )}
+
+              <Row>
+                <Col>
+                  <h3>Nombre: {this.state.selectName}</h3>
+                </Col>
+                <Col>
+                  <h3>País de Origen: {this.state.selectCounrty}</h3>
+                </Col>
+              </Row>
+
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.lenguajesList}
+                columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+        </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+
+}
+
+export default Register;
+
+
+
+/*
+
+REGISTER CSS
+
+*/
+
+
+
+
+.Register {
+    text-align: center;
+    background: linear-gradient(#ed7a1b, #1aa338, #ed7a1b);
+}
+
+.Container {
+    text-align: center;
+    background-color: rgb(233, 236, 239);
+}
+
+
+/*
+
+TEACHING
+
+*/
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import './Teaching.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+
+
+
+class Teaching extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(`http://localhost:5000/people_by_teach?continent=${userInfo.region}`);
+
+    await fetch(`http://localhost:5000/people_by_teach?continent=${userInfo.region}`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  loginAttempt = (res) => {
+
+    this.setState({
+      items: res
+    })
+
+    console.log(this.state.items);
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  render() {
+    const columnsMeansPractice = [
+      { dataField: '_id', text: 'Lenguaje' },
+      { dataField: 'count', text: 'Cantidad de personas' }
+    ];
+    return (
+      <div className="Teaching">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <br />
+        <Container>
+          <Row>
+            <Col>
+              <Jumbotron fluid>
+                <Container>
+                  <h1>Personas registradas por lenguajes que enseñan</h1>
+                  <p>
+                    Ver cantidad de usuarios registrados por idioma a enseñar. Mostrar el
+                    idioma y la cantidad correspondiente.
+                  </p>
+                </Container>
+              </Jumbotron>
+              <br />
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.items}
+                columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+        </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+
+}
+
+export default Teaching;
+
+/*
+
+TEACHING CSS
+
+*/
+
+
+.Teaching {
+    text-align: center;
+    background: linear-gradient(#0084ff, #1aa338);
+}
+
+
+/*
+
+WELCOMEPAGE
+
+*/
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import './Welcome.css';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
+import logo from '../images/logo.png';
+
+
+class WelcomePage extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  render() {
+    return (
+      <div className="WelcomePage">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomePage">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Register">Personas registradas</Nav.Link>
+              <Nav.Link href="./Country">Personas registradas por país</Nav.Link>
+              <Nav.Link href="./Teaching">Personas registradas por lenguajes que enseñan</Nav.Link>
+              <Nav.Link href="./Learning">Personas registradas por lenguajes que aprenden</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <Container>
+          <Row>
+            <Col>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <Image src={logo} fluid />
+              <br />
+              <br />
+              <br />
+              <h1>Bienvenido Administrador</h1>
+              <p>
+                Esperamos que disfrute las búsquedas
+                  </p>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
+
+}
+
+export default WelcomePage;
+
+
+
+
+/*
+
+WELCOMEPAGE CSS
+
+*/
+
+
+
+
+
+.WelcomePage {
+    align-items: center;
+    /*justify-content: center;*/
+    background: linear-gradient(#1aa338, #ed7a1b, #ffc000, #0084ff);
+}
+
+
+
+/*
+
+CLIENT
+
+*/
+
+
+
+/*
+
+WELCOMECLIENT
+
+*/
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import { Image } from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import logo from '../images/logo.png';
+
+class WelcomeClient extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  render() {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'))
+
+    console.log('Region que el usuario escogió');
+    console.log(userInfo);
+
+    console.log('URL con la region');
+    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=level`);
+    return (
+      <div className="WelcomeClient">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+              <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+              <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+              <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+              <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <Container>
+          <Row>
+            <Col>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <Image src={logo} fluid />
+              <br />
+              <br />
+              <br />
+              <h1>Bienvenid@ {userInfo.name}</h1>
+              <p>
+                Esperamos que disfrute las búsquedas
+                  </p>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
+
+}
+
+export default WelcomeClient;
+
+
+/*
+
+WELCOMECLIENT CSS
+
+*/
+
+
+.WelcomeClient {
+  align-items: center;
+  background: linear-gradient(#fdbb2d, #65ff93, #00d4ff, #fdbb2d);
+}
+
+
+/*
+
+CONSULTA5PAGE
+
+*/
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Button } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import './Consulta5Page.css';
+import Badge from 'react-bootstrap/Badge';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+
+class Consulta5Page extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false,
+      tempListLanguage: [],
+      temlist: [],
+      temlistTeach: [],
+      temlistLearn: [],
+
+
+
+      guardarLenguageTeach: [],
+      guardarLenguageLearn: [],
+      languageTeach: '',
+      languageLearn: '',
+      jsonFile: {
+        learn: [],
+        teach: [],
+        country: '',
+        min: 0,
+        max: 0
+      },
+
+      resultadosFlag: false,
+      resultadoJson: null,
+      resultado: [],
+
+
+
+      countryList: [],
+      selectCountry: '',
+      guardarCountry: [],
+
+
+
+
+      ageList: [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+        61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+        71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+        81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+        91, 92, 93, 94, 95, 96, 97, 98, 99, 100
+      ],
+      selectAgeMin: 0,
+      selectAgeMax: 0,
+      guardarAge: [],
+
+      resultadoListaName: [],
+      nombreSelectDropdown: '',
+      edadSelectDropdown: '',
+      paisSelectDropdwn: '',
+      resultadoLenguajesLearn: [],
+      resultadoLenguajesTeach: []
+
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickSelectLanguageTeach = (event) => {
+    this.setState({
+      languageTeach: event
+    })
+  }
+
+  clickSelectLanguageLearn = (event) => {
+    this.setState({
+      languageLearn: event
+    })
+  }
+
+  clickSelectCountry = (event) => {
+    this.setState({
+      selectCountry: event
+    })
+  }
+
+  clickSelectAgeMin = (event) => {
+    this.setState({
+      selectAgeMin: event
+    })
+  }
+
+  clickSelectAgeMax = (event) => {
+    this.setState({
+      selectAgeMax: event
+    })
+  }
+
+  clickAddLanguagelearn = () => {
+    if (this.state.guardarLenguageLearn.length === this.state.temlistLearn.length) {
+
+    } else {
+      this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
+      this.state.jsonFile.learn.push(this.state.languageLearn);
+    }
+  }
+
+
+  clickAddCountry = () => {
+    if (this.state.guardarCountry.length === 0) {
+      this.state.guardarCountry.push({ 'country': this.state.selectCountry });
+      this.state.jsonFile.country = this.state.selectCountry;
+    } else {
+      if (this.state.guardarCountry.length === 1) {
+        this.state.guardarCountry.splice(0, 1);
+        this.state.guardarCountry.push({ 'country': this.state.selectCountry });
+        this.state.jsonFile.country = this.state.selectCountry;
+      }
+    }
+  }
+
+  clickAddAge = () => {
+    if (this.state.guardarAge.length === 0) {
+      this.state.guardarAge.push({ 'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax });
+      this.state.jsonFile.min = Number(this.state.selectAgeMin);
+      this.state.jsonFile.max = Number(this.state.selectAgeMax);
+    } else {
+      if (this.state.guardarAge.length === 1) {
+        this.state.guardarAge.splice(0, 1);
+        this.state.guardarAge.push({ 'min': this.state.selectAgeMin, 'max': this.state.selectAgeMax });
+        this.state.jsonFile.min = Number(this.state.selectAgeMin);
+        this.state.jsonFile.max = Number(this.state.selectAgeMax);
+      }
+    }
+  }
+
+  clickAddLanguageteach = () => {
+    if (this.state.guardarLenguageTeach.length === this.state.temlistTeach.length) {
+
+    } else {
+      this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
+      this.state.jsonFile.teach.push(this.state.languageTeach);
+    }
+  }
+
+  clickRealizarBúsqueda = () => {
+    this.busquedaResultados();
+    this.setState({
+      resultadosFlag: true
+    })
+    console.log(this.state.jsonFile);
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.countryAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  countryAttempt = (res) => {
+    this.setState({
+      countryList: res
+    })
+  }
+
+  busquedaResultados = async () => {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    const url = `http://localhost:5000/people_learn_teach_country_age?continent=${userInfo.region}`;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    this.state.resultadoJson = data;
+    this.creacionListaTabla();
+
+  }
+
+  actualizarListaResultados(e, name) {
+    this.setState({
+      resultado: e,
+      resultadoListaName: name
+    })
+  }
+
+  getSelectName = (e) => {
+    this.setState({
+      nombreSelectDropdown: e
+    })
+    this.searchCountry(e)
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.resultadoJson.length; i++) {
+      if (this.state.resultadoJson[i].name == name) {
+        this.state.edadSelectDropdown = this.state.resultadoJson[i].age;
+        this.state.paisSelectDropdwn = this.state.resultadoJson[i].country;
+        this.actualizarLenguajes(this.state.resultadoJson[i].learn, this.state.resultadoJson[i].teach);
+      }
+      else {
+      }
+    }
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      resultadoLenguajesLearn: e,
+      resultadoLenguajesTeach: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.resultadoLenguajesLearn);
+    console.log('TEACH');
+    console.log(this.state.resultadoLenguajesTeach);
+  }
+
+  creacionListaTabla = () => {
+    var temp = [];
+    var tempName = [];
+    if (this.state.resultado.length === this.state.resultadoJson.length) {
+
+    }
+    else {
+
+      for (let i = 0; i < this.state.resultadoJson.length; i++) {
+        temp.push({
+          'name': this.state.resultadoJson[i].name,
+          'age': this.state.resultadoJson[i].age,
+          'gender': this.state.resultadoJson[i].gender
+        })
+        tempName.push(this.state.resultadoJson[i].name);
+        this.actualizarListaResultados(temp, tempName);
+      }
+
+    }
+  }
+
+  render() {
+    const columnslanguage = [
+      { dataField: 'language', text: 'Lenguaje Seleccionado' }
+    ];
+
+    const columnscountry = [
+      { dataField: 'country', text: 'País Seleccionado' }
+    ];
+
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
+    ];
+
+    const columnsAge = [
+      { dataField: 'min', text: 'Edad Mínima Seleccionada' },
+      { dataField: 'max', text: 'Edad Máxima Seleccionada' }
+    ];
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.temlistTeach = userInfo.teach;
+    this.state.temlistLearn = userInfo.learn;
+    if (this.state.resultadosFlag) {
+      return (
+        <div className="Consulta5Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen y
+                    un rango de edad.
+                      </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el Rango de edad</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Mínima'}
+                      onSelect={this.clickSelectAgeMin}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMin}</p>
+                  </Col>
+
+
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Máxima'}
+                      onSelect={this.clickSelectAgeMax}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMax}</p>
+                  </Col>
+
+
+                  <Col md="auto">
+                    <Button onClick={this.clickAddAge}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="min"
+                      data={this.state.guardarAge}
+                      columns={columnsAge} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>Por favor seleccione el Usuario</h3>
+
+
+                {['Seleccione el Usuario'].map(
+                  (variant) => (
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={variant}
+                      id={`dropdown-variants-${variant}`}
+                      variant={variant.toLowerCase()}
+                      title={variant}
+                      onSelect={this.getSelectName}
+                    >
+                      {this.state.resultadoListaName.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                  ),
+                )}
+
+
+              </Col>
+            </Row>
+
+            <br />
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Nombre: {this.state.nombreSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Edad: {this.state.edadSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Pais: {this.state.paisSelectDropdwn}</h4>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesLearn}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea enseñar</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesTeach}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+
+          </Container>
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Consulta5Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #4 Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen y
+                    un rango de edad.
+                        </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el Rango de edad</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Mínima'}
+                      onSelect={this.clickSelectAgeMin}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMin}</p>
+                  </Col>
+
+
+
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Edad Máxima'}
+                      onSelect={this.clickSelectAgeMax}
+                    >
+                      {this.state.ageList.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectAgeMax}</p>
+                  </Col>
+
+
+                  <Col md="auto">
+                    <Button onClick={this.clickAddAge}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarAge}
+                      columns={columnsAge} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+
+
+
+
+
+
+
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+  }
+
+}
+
+export default Consulta5Page;
+
+
+
+
+/*
+
+CONSULTA5PAGE CSS
+
+*/
+
+
+
+.Consulta5Page {
+    text-align: center;
+    background: linear-gradient(#65ff93, #00d4ff);
+}
+
+
+
+/*
+
+CONSULTA4PAGE 
+
+*/
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Button } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import './Consulta4Page.css';
+import Badge from 'react-bootstrap/Badge';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+
+class Consulta4Page extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false,
+      tempListLanguage: [],
+      temlist: [],
+      temlistTeach: [],
+      temlistLearn: [],
+
+
+
+      guardarLenguageTeach: [],
+      guardarLenguageLearn: [],
+      languageTeach: '',
+      languageLearn: '',
+      jsonFile: {
+        learn: [],
+        teach: [],
+        country: ''
+      },
+
+      resultadosFlag: false,
+      resultadoJson: null,
+      resultado: [],
+
+
+
+      countryList: [],
+      selectCountry: '',
+      guardarCountry: [],
+
+      resultadoListaName: [],
+      nombreSelectDropdown: '',
+      edadSelectDropdown: '',
+      paisSelectDropdwn: '',
+      resultadoLenguajesLearn: [],
+      resultadoLenguajesTeach: []
+
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickSelectLanguageTeach = (event) => {
+    this.setState({
+      languageTeach: event
+    })
+  }
+
+  clickSelectLanguageLearn = (event) => {
+    this.setState({
+      languageLearn: event
+    })
+  }
+
+  clickSelectCountry = (event) => {
+    this.setState({
+      selectCountry: event
+    })
+  }
+
+  clickAddLanguagelearn = () => {
+    if (this.state.guardarLenguageLearn.length === this.state.temlistLearn.length) {
+
+    } else {
+      this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
+      this.state.jsonFile.learn.push(this.state.languageLearn);
+    }
+  }
+
+
+  clickAddCountry = () => {
+    if (this.state.guardarCountry.length === 0) {
+      this.state.guardarCountry.push({ 'country': this.state.selectCountry });
+      this.state.jsonFile.country = this.state.selectCountry;
+    } else {
+      if (this.state.guardarCountry.length === 1) {
+        this.state.guardarCountry.splice(0, 1);
+        this.state.guardarCountry.push({ 'country': this.state.selectCountry });
+        this.state.jsonFile.country = this.state.selectCountry;
+      }
+    }
+  }
+
+  clickAddLanguageteach = () => {
+    if (this.state.guardarLenguageTeach.length === this.state.temlistTeach.length) {
+
+    } else {
+      this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
+      this.state.jsonFile.teach.push(this.state.languageTeach);
+    }
+  }
+
+  clickRealizarBúsqueda = () => {
+    this.busquedaResultados();
+    this.setState({
+      resultadosFlag: true
+    })
+    console.log(this.state.jsonFile);
+  }
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.countryAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+  countryAttempt = (res) => {
+    this.setState({
+      countryList: res
+    })
+  }
+
+  busquedaResultados = async () => {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    const url = `http://localhost:5000/people_learn_teach_country?continent=${userInfo.region}`;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    this.state.resultadoJson = data;
+    this.creacionListaTabla();
+
+  }
+
+  actualizarListaResultados(e, name) {
+    this.setState({
+      resultado: e,
+      resultadoListaName: name
+    })
+  }
+
+  getSelectName = (e) => {
+    this.setState({
+      nombreSelectDropdown: e
+    })
+    this.searchCountry(e)
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.resultadoJson.length; i++) {
+      if (this.state.resultadoJson[i].name == name) {
+        this.state.edadSelectDropdown = this.state.resultadoJson[i].age;
+        this.state.paisSelectDropdwn = this.state.resultadoJson[i].country;
+        this.actualizarLenguajes(this.state.resultadoJson[i].learn, this.state.resultadoJson[i].teach);
+      }
+      else {
+      }
+    }
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      resultadoLenguajesLearn: e,
+      resultadoLenguajesTeach: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.resultadoLenguajesLearn);
+    console.log('TEACH');
+    console.log(this.state.resultadoLenguajesTeach);
+  }
+
+  creacionListaTabla = () => {
+    var temp = [];
+    var tempName = [];
+    if (this.state.resultado.length === this.state.resultadoJson.length) {
+
+    }
+    else {
+
+      for (let i = 0; i < this.state.resultadoJson.length; i++) {
+        temp.push({
+          'name': this.state.resultadoJson[i].name,
+          'age': this.state.resultadoJson[i].age,
+          'gender': this.state.resultadoJson[i].gender
+        })
+        tempName.push(this.state.resultadoJson[i].name);
+        this.actualizarListaResultados(temp, tempName);
+      }
+
+    }
+  }
+
+  render() {
+    const columnslanguage = [
+      { dataField: 'language', text: 'Lenguaje Seleccionado' }
+    ];
+
+    const columnscountry = [
+      { dataField: 'country', text: 'País Seleccionado' }
+    ];
+
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
+    ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.temlistTeach = userInfo.teach;
+    this.state.temlistLearn = userInfo.learn;
+    if (this.state.resultadosFlag) {
+      return (
+        <div className="Consulta4Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #3 Búsqueda idiomas que Enseño y que me enseñen por País</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen
+                      </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
+
+\
+                  </Row>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>Por favor seleccione el Usuario</h3>
+
+
+                {['Seleccione el Usuario'].map(
+                  (variant) => (
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={variant}
+                      id={`dropdown-variants-${variant}`}
+                      variant={variant.toLowerCase()}
+                      title={variant}
+                      onSelect={this.getSelectName}
+                    >
+                      {this.state.resultadoListaName.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                  ),
+                )}
+
+
+              </Col>
+            </Row>
+
+            <br />
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Nombre: {this.state.nombreSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Edad: {this.state.edadSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Pais: {this.state.paisSelectDropdwn}</h4>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesLearn}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea enseñar</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesTeach}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Consulta4Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #3 Búsqueda idiomas que Enseño y que me enseñen por País</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar, además por el país de origen
+                        </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el país de Origen</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Pais'}
+                      onSelect={this.clickSelectCountry}
+                    >
+                      {this.state.countryList.map((catg) => (
+                        <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.selectCountry}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddCountry}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="country"
+                      data={this.state.guardarCountry}
+                      columns={columnscountry} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+
+
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+  }
+
+}
+
+export default Consulta4Page;
+
+
+
+/*
+
+CONSULTA4PAGE CSS
+
+*/
+
+
+
+.Consulta4Page {
+    text-align: center;
+    background: linear-gradient(#fdbb2d, #00d4ff);
+}
+
+
+
+/*
+
+CONSULTA3PAGE
+
+*/
+
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Button } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import './Consulta3Page.css';
+import Badge from 'react-bootstrap/Badge';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+class Consulta3Page extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      items: [],
+      error: null,
+      isLoaded: false,
+      loginFlag: false,
+      tempListLanguage: [],
+      temlist: [],
+      temlistTeach: [],
+      temlistLearn: [],
+
+
+
+      guardarLenguageTeach: [],
+      guardarLenguageLearn: [],
+      languageTeach: '',
+      languageLearn: '',
+      jsonFile: {
+        learn: [],
+        teach: []
+      },
+
+      resultadosFlag: false,
+      resultadoJson: null,
+      resultado: [],
+
+      resultadoListaName: [],
+      nombreSelectDropdown: '',
+      edadSelectDropdown: '',
+      paisSelectDropdwn: '',
+      resultadoLenguajesLearn: [],
+      resultadoLenguajesTeach: []
+
+
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickSelectLanguageTeach = (event) => {
+    this.setState({
+      languageTeach: event
+    })
+  }
+
+  clickSelectLanguageLearn = (event) => {
+    this.setState({
+      languageLearn: event
+    })
+  }
+
+  clickAddLanguagelearn = () => {
+    if (this.state.guardarLenguageLearn.length === this.state.temlistLearn.length) {
+
+    } else {
+      this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
+      this.state.jsonFile.learn.push(this.state.languageLearn);
+    }
+  }
+
+  clickAddLanguageteach = () => {
+    if (this.state.guardarLenguageTeach.length === this.state.temlistTeach.length) {
+
+    } else {
+      this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
+      this.state.jsonFile.teach.push(this.state.languageTeach);
+    }
+  }
+
+  clickRealizarBúsqueda = () => {
+    this.busquedaResultados();
+    this.setState({
+      resultadosFlag: true
+    })
+  }
+
+  busquedaResultados = async () => {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    const url = `http://localhost:5000/people_learn_teach?continent=${userInfo.region}`;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    this.state.resultadoJson = data;
+    this.creacionListaTabla();
+
+  }
+
+  actualizarListaResultados(e, name) {
+    this.setState({
+      resultado: e,
+      resultadoListaName: name
+    })
+  }
+
+  getSelectName = (e) => {
+    this.setState({
+      nombreSelectDropdown: e
+    })
+    this.searchCountry(e)
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.resultadoJson.length; i++) {
+      if (this.state.resultadoJson[i].name == name) {
+        this.state.edadSelectDropdown = this.state.resultadoJson[i].age;
+        this.state.paisSelectDropdwn = this.state.resultadoJson[i].country;
+        this.actualizarLenguajes(this.state.resultadoJson[i].learn, this.state.resultadoJson[i].teach);
+      }
+      else {
+      }
+    }
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      resultadoLenguajesLearn: e,
+      resultadoLenguajesTeach: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.resultadoLenguajesLearn);
+    console.log('TEACH');
+    console.log(this.state.resultadoLenguajesTeach);
+  }
+
+  creacionListaTabla = () => {
+    var temp = [];
+    var tempName = [];
+    if (this.state.resultado.length === this.state.resultadoJson.length) {
+
+    }
+    else {
+
+      for (let i = 0; i < this.state.resultadoJson.length; i++) {
+        temp.push({
+          'name': this.state.resultadoJson[i].name,
+          'age': this.state.resultadoJson[i].age,
+          'gender': this.state.resultadoJson[i].gender
+        })
+        tempName.push(this.state.resultadoJson[i].name);
+        this.actualizarListaResultados(temp, tempName);
+      }
+
+    }
+  }
+
+  render() {
+    const columnslanguage = [
+      { dataField: 'language', text: 'Lenguaje Seleccionado' }
+    ];
+
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
+    ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.temlistTeach = userInfo.teach;
+    this.state.temlistLearn = userInfo.learn;
+    if (this.state.resultadosFlag) {
+      return (
+        <div className="Consulta3Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #2 Búsqueda idiomas que Enseño y que me enseñen</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar
+                        </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>Por favor seleccione el Usuario</h3>
+
+
+                {['Seleccione el Usuario'].map(
+                  (variant) => (
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={variant}
+                      id={`dropdown-variants-${variant}`}
+                      variant={variant.toLowerCase()}
+                      title={variant}
+                      onSelect={this.getSelectName}
+                    >
+                      {this.state.resultadoListaName.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                  ),
+                )}
+
+
+              </Col>
+            </Row>
+
+            <br />
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Nombre: {this.state.nombreSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Edad: {this.state.edadSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Pais: {this.state.paisSelectDropdwn}</h4>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesLearn}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea enseñar</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesTeach}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+
+
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="Consulta3Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #2 Búsqueda idiomas que Enseño y que me enseñen</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar y que estos puedan enseñar uno o más de los
+                    idiomas que la persona P desea practicar
+                          </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+
+          <Container>
+            <Row>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Enseñar'}
+                      onSelect={this.clickSelectLanguageTeach}
+                    >
+                      {this.state.temlistTeach.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageTeach}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguageteach}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageTeach}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+
+
+              <Col>
+                <Row>
+                  <Col sm="12" md={{ size: 6, offset: 0 }}>
+                    <h3>
+                      <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                    </h3>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <DropdownButton
+                      as={ButtonGroup}
+                      title={'Escoja Lenguaje Practicar'}
+                      onSelect={this.clickSelectLanguageLearn}
+                    >
+                      {this.state.temlistLearn.map((catg) => (
+                        <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                    <p>{this.state.languageLearn}</p>
+                  </Col>
+                  <Col md="auto">
+                    <Button onClick={this.clickAddLanguagelearn}
+                      variant="primary" >Añadir</Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <Col md="auto">
+                    <BootstrapTable
+                      keyField="language"
+                      data={this.state.guardarLenguageLearn}
+                      columns={columnslanguage} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+  }
+
+}
+
+export default Consulta3Page;
+
+
+
+/*
+
+CONSULTA3PAGE CSS
+
+*/
+
+
+
+.Consulta3Page {
+    text-align: center;
+    background: linear-gradient(#00d4ff, #65ff93);
+}
+
+
+
+/*
+
+CONSULTA2PAGE CSS
+
+*/
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Button } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import './Consulta2Page.css';
+import Badge from 'react-bootstrap/Badge';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+class Consulta2Page extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      error: null,
+      isLoaded: false,
+      loginFlag: false,
+      choosenlanguages: [],
+      languageSelected: '',
+      temlist: [],
+      tempListLanguage: [],
+      jsonFile: {
+        learn: []
+      },
+      resultadosFlag: false,
+      resultadoJson: null,
+      resultado: [],
+      resultadoLenguajesLearn: [],
+      resultadoListaName: [],
+      nombreSelectDropdown: '',
+      edadSelectDropdown: '',
+      paisSelectDropdwn: ''
+    }
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+  clickSelectLanguage = (event) => {
+    this.setState({
+      languageSelected: event
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickAddLanguage = () => {
+    if (this.state.choosenlanguages.length === this.state.temlist.length) {
+
+    } else {
+      this.state.choosenlanguages.push({ 'language': this.state.languageSelected });
+      this.state.jsonFile.learn.push(this.state.languageSelected);
+    }
+  }
+
+  clickRealizarBúsqueda = () => {
+    this.busquedaResultados();
+    this.setState({
+      resultadosFlag: true
+    })
+  }
+
+  getSelectName = (e) => {
+    this.setState({
+      nombreSelectDropdown: e
+    })
+    this.searchCountry(e)
+  }
+
+  searchCountry(name) {
+    var test = [];
+    for (let i = 0; i < this.state.resultadoJson.length; i++) {
+      if (this.state.resultadoJson[i].name == name) {
+        this.state.edadSelectDropdown = this.state.resultadoJson[i].age;
+        this.state.paisSelectDropdwn = this.state.resultadoJson[i].country;
+        this.actualizarLenguajes(this.state.resultadoJson[i].learn);
+      }
+      else {
+      }
+    }
+  }
+
+  actualizarLenguajes(e) {
+    this.setState({
+      resultadoLenguajesLearn: e
+    })
+  }
+
+  actualizarListaResultados(e, name) {
+    this.setState({
+      resultado: e,
+      resultadoListaName: name
+    })
+  }
+
+
+  creacionListaTabla = () => {
+    var temp = [];
+    var tempName = [];
+    if (this.state.resultado.length === this.state.resultadoJson.length) {
+
+    }
+    else {
+
+      for (let i = 0; i < this.state.resultadoJson.length; i++) {
+        temp.push({
+          'name': this.state.resultadoJson[i].name,
+          'age': this.state.resultadoJson[i].age,
+          'gender': this.state.resultadoJson[i].gender
+        })
+        tempName.push(this.state.resultadoJson[i].name);
+        this.actualizarListaResultados(temp, tempName);
+      }
+    }
+  }
+
+  busquedaResultados = async () => {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    const url = `http://localhost:5000/people_learn?continent=${userInfo.region}`;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    this.state.resultadoJson = data;
+    this.creacionListaTabla();
+
+  }
+
+  render() {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.temlist = userInfo.teach;
+
+    const columnslanguage = [
+      { dataField: 'language', text: 'Lenguaje Seleccionado' }
+    ];
+
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
+    ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
+
+    if (this.state.resultadosFlag) {
+      return (
+        <div className="Consulta2Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #1 Búsqueda idiomas que Enseño</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar.
+                    </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+          <Container>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                </h3>
+              </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+                <DropdownButton
+                  as={ButtonGroup}
+                  title={'Escoja Lenguaje'}
+                  onSelect={this.clickSelectLanguage}
+                >
+                  {this.state.temlist.map((catg) => (
+                    <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                  ))}
+                </DropdownButton>
+                <p>{this.state.languageSelected}</p>
+              </Col>
+              <Col md="auto">
+                <Button onClick={this.clickAddLanguage}
+                  variant="primary" >Añadir</Button>
+              </Col>
+            </Row>
+
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+                <BootstrapTable
+                  keyField="language"
+                  data={this.state.choosenlanguages}
+                  columns={columnslanguage} />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Badge variant="light">Resultados</Badge>
+                </h3>
+              </Col>
+            </Row>
+            <br />
+            {/*
+            Se selecciona el Usuario
+            */}
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>Por favor seleccione el Usuario</h3>
+
+                {['Seleccione el Usuario'].map(
+                  (variant) => (
+                    <DropdownButton
+                      as={ButtonGroup}
+                      key={variant}
+                      id={`dropdown-variants-${variant}`}
+                      variant={variant.toLowerCase()}
+                      title={variant}
+                      onSelect={this.getSelectName}
+                    >
+                      {this.state.resultadoListaName.map((catg) => (
+                        <Dropdown.Item eventKey={catg}>{catg}</Dropdown.Item>
+                      ))}
+                    </DropdownButton>
+                  ),
+                )}
+
+              </Col>
+            </Row>
+
+            <br />
+
+
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Nombre: {this.state.nombreSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Edad: {this.state.edadSelectDropdown}</h4>
+              </Col>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Pais: {this.state.paisSelectDropdwn}</h4>
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario desea aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.resultadoLenguajesLearn}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+
+    } else {
+      return (
+        <div className="Consulta2Page">
+          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+            <Navbar.Collapse id="responsive-navbar-nav">
+
+              <Nav className="mr-auto">
+                <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+                <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+                <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+                <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+                <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              </Nav>
+
+            </Navbar.Collapse>
+          </Navbar>
+          {this.renderRedirect()};
+          <Container>
+            <Row>
+              <Col>
+                <Jumbotron fluid>
+                  <h1>Consulta #1 Búsqueda idiomas que Enseño</h1>
+                  <p>
+                    Buscar a otros interesados en practicar uno o más de los idiomas que la
+                    persona P puede enseñar.
+                    </p>
+                </Jumbotron>
+              </Col>
+            </Row>
+          </Container>
+          <Container>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Badge variant="light">Seleccione el o los idiomas que desea buscar</Badge>
+                </h3>
+              </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+                <DropdownButton
+                  as={ButtonGroup}
+                  title={'Escoja Lenguaje'}
+                  onSelect={this.clickSelectLanguage}
+                >
+                  {this.state.temlist.map((catg) => (
+                    <Dropdown.Item eventKey={catg.language}>{catg.language}</Dropdown.Item>
+                  ))}
+                </DropdownButton>
+                <p>{this.state.languageSelected}</p>
+              </Col>
+              <Col md="auto">
+                <Button onClick={this.clickAddLanguage}
+                  variant="primary" >Añadir</Button>
+              </Col>
+            </Row>
+
+            <Row className="justify-content-md-center">
+              <Col md="auto">
+                <BootstrapTable
+                  keyField="language"
+                  data={this.state.choosenlanguages}
+                  columns={columnslanguage} />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Button onClick={this.clickRealizarBúsqueda}
+                    variant="primary" >Realizar Búsqueda</Button>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </div>
+      );
+    }
+
+
+  }
+
+}
+
+export default Consulta2Page;
+
+
+
+/*
+
+CONSULTA2PAGE CSS
+
+*/
+
+
+
+.Consulta2Page {
+    text-align: center;
+    background: linear-gradient(#fdbb2d, #65ff93);
+}
+
+
+/*
+
+CONSULTA1PAGE 
+
+*/
+
+
+
+
+import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Button } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Navbar from 'react-bootstrap/Navbar';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import { Redirect } from 'react-router-dom';
+import './WelcomeClient.css';
+import './Consulta1Page.css';
+import Badge from 'react-bootstrap/Badge';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
+
+
+class Consulta1Page extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      generalLanguage: [
+        {
+          name: '',
+          count: ''
+        }
+      ],
+      error: null,
+      isLoaded: false,
+      loginFlag: false,
+      temlist: [],
+      temlistTeach: [],
+      temlistLearn: [],
+
+
+
+      guardarHobbie: [],
+      guardarHobbieJson: [],
+      guardarMedia: [],
+      guardarMediaJson: [],
+      guardarLenguageLearn: [],
+      languageTeach: '',
+      languageLearn: '',
+      jsonFile: {
+        name: '',
+        hobbies: [],
+        media: []
+      },
+
+      resultadosFlag: false,
+      resultadoJson: null,
+      resultado: [],
+
+
+
+
+      hobbielist: [],
+      myhobbielist: [],
+      myhobbielistJson: [],
+      selectHobbie: '',
+      mediaList: [],
+      mymediaList: [],
+      mymedialistJson: [],
+      selectMedia: '',
+      usersList: [],
+
+      myteachList: [],
+      mylearnList: [],
+      myNombre: '',
+      myEdad: '',
+      myPais: ''
+
+    }
+  }
+
+
+  componentDidMount = async (e) => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.userAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+
+    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=hobbie`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.hobbiesAttempt(response))
+      .catch(err => this.errorHandler(err))
+
+    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=media`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.mediaAttempt(response))
+      .catch(err => this.errorHandler(err))
+  }
+
+
+  userAttempt = (res) => {
+    this.setState({
+      usersList: res
+    })
+    this.asignarMisListas();
+  }
+
+
+  asignarMisListas = () => {
+    var temLearn = [];
+    var temTeach = [];
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    const name = userInfo.name;
+    for (let i = 0; i < this.state.usersList.length; i++) {
+      if (this.state.usersList[i].name === name) {
+        this.state.myhobbielist = this.state.usersList[i].hobbies;
+        this.state.mymediaList = this.state.usersList[i].media;
+        this.state.myNombre = name;
+        this.state.myEdad = this.state.usersList[i].age;
+        this.state.myPais = this.state.usersList[i].country;
+        this.actualizarLenguajes(this.state.usersList[i].learn, this.state.usersList[i].teach)
+      }
+    }
+    this.asignarHobbieListJson();
+    this.asignarMediaListJson();
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      mylearnList: e,
+      myteachList: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.mylearnList);
+    console.log('TEACH');
+    console.log(this.state.myteachList);
+  }
+
+  asignarMediaListJson = () => {
+    for (let i = 0; i < this.state.mymediaList.length; i++) {
+      this.state.mymedialistJson.push({ 'name': this.state.mymediaList[i] });
+    }
+  }
+
+  asignarHobbieListJson = () => {
+    for (let i = 0; i < this.state.myhobbielist.length; i++) {
+      this.state.myhobbielistJson.push({ 'name': this.state.myhobbielist[i] });
+    }
+  }
+
+  hobbiesAttempt = (res) => {
+    this.setState({
+      hobbielist: res
+    })
+  }
+
+  mediaAttempt = (res) => {
+    this.setState({
+      mediaList: res
+    })
+  }
+
+  clickPresionado = (event) => {
+    this.setState({
+      loginFlag: true
+    })
+  }
+
+  renderRedirect = () => {
+    if (this.state.loginFlag) {
+      return <Redirect to='/IntroPage' />
+    }
+  }
+
+  clickSelectHobbie = (event) => {
+    this.setState({
+      selectHobbie: event
+    })
+  }
+
+  clickSelectMedia = (event) => {
+    this.setState({
+      selectMedia: event
+    })
+  }
+
+  clickAddMedia = () => {
+    this.state.guardarMedia.push({ 'name': this.state.selectMedia });
+    this.state.guardarMediaJson.push(this.state.selectMedia);
+  }
+
+  clickAddHobbie = () => {
+    this.state.guardarHobbie.push({ 'name': this.state.selectHobbie });
+    this.state.guardarHobbieJson.push(this.state.selectHobbie);
+  }
+
+  crearJson = () => {
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.jsonFile.name = userInfo.name;
+    for (let i = 0; i < this.state.guardarHobbieJson.length; i++) {
+      this.state.jsonFile.hobbies.push(this.state.guardarHobbieJson[i])
+    }
+    for (let i = 0; i < this.state.guardarMediaJson.length; i++) {
+      this.state.jsonFile.media.push(this.state.guardarMediaJson[i])
+    }
+
+    console.log('El JSON File');
+    console.log(this.state.jsonFile);
+  }
+
+  clickRealizarBúsqueda = () => {
+    this.crearJson();
+    this.busquedaResultados();
+    this.setState({
+      resultadosFlag: true
+    })
+  }
+
+  sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
+  busquedaResultados = async () => {
+
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+
+    const url = `http://localhost:5000/update?continent=${userInfo.region}`;
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.jsonFile)
+    };
+
+    const response = await fetch(url, requestOptions);
+    this.sleep(500);
+    window.location.reload();
+
+  }
+
+
+  render() {
+
+    const columnsNewHobbie = [
+      { dataField: 'name', text: 'Hobbie Seleccionado' }
+    ];
+
+    const columnsNewMedio = [
+      { dataField: 'name', text: 'Medio de Contacto Seleccionado' }
+    ];
+
+    const columnsmyHobbie = [
+      { dataField: 'name', text: 'Mi Hobbie Actual' }
+    ];
+
+    const columnsmyMedio = [
+      { dataField: 'name', text: 'Mi Medio de Contacto Actual' }
+    ];
+
+    const columnsRespuesta = [
+      { dataField: 'name', text: 'Nombre' },
+      { dataField: 'age', text: 'Edad' },
+      { dataField: 'gender', text: 'Género' }
+    ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
+    const userInfo = JSON.parse(localStorage.getItem('user_info'));
+    this.state.temlistTeach = userInfo.teach;
+    this.state.temlistLearn = userInfo.learn;
+    return (
+      <div className="Consulta1Page">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+
+          <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+          <Navbar.Collapse id="responsive-navbar-nav">
+
+            <Nav className="mr-auto">
+              <Nav.Link href="./Consulta2Page">Búsqueda idiomas que Enseño</Nav.Link>
+              <Nav.Link href="./Consulta3Page">Búsqueda idiomas que Enseño y que me enseñen</Nav.Link>
+              <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
+              <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
+              <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Navbar>
+        {this.renderRedirect()};
+        <Container>
+          <Row>
+            <Col>
+              <Jumbotron fluid>
+                <h1>Consulta #5 Modificar mis datos</h1>
+                <p>
+                  Un usuario puede modificar los siguientes datos:
+                  hobbies, medio por el cual desea ser contactado para practicar el
+                  idioma.
+                        </p>
+              </Jumbotron>
+            </Col>
+          </Row>
+        </Container>
+
+
+        <Container>
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h3>
+                <Badge variant="light">Seleccione los nuevos datos para modificar</Badge>
+              </h3>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row>
+
+
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <DropdownButton
+                    as={ButtonGroup}
+                    title={'Escoger Nuevo Hobbie'}
+                    onSelect={this.clickSelectHobbie}
+                  >
+                    {this.state.hobbielist.map((catg) => (
+                      <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                    ))}
+                  </DropdownButton>
+                  <p>{this.state.selectHobbie}</p>
+                </Col>
+                <Col md="auto">
+                  <Button onClick={this.clickAddHobbie}
+                    variant="primary" >Añadir</Button>
+                </Col>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <BootstrapTable
+                    keyField="name"
+                    data={this.state.guardarHobbie}
+                    columns={columnsNewHobbie} />
+                </Col>
+              </Row>
+            </Col>
+
+
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <DropdownButton
+                    as={ButtonGroup}
+                    title={'Escoger Nuevo Medio de Contacto'}
+                    onSelect={this.clickSelectMedia}
+                  >
+                    {this.state.mediaList.map((catg) => (
+                      <Dropdown.Item eventKey={catg.name}>{catg.name}</Dropdown.Item>
+                    ))}
+                  </DropdownButton>
+                  <p>{this.state.selectMedia}</p>
+                </Col>
+                <Col md="auto">
+                  <Button onClick={this.clickAddMedia}
+                    variant="primary" >Añadir</Button>
+                </Col>
+              </Row>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <BootstrapTable
+                    keyField="language"
+                    data={this.state.guardarMedia}
+                    columns={columnsNewMedio} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+
+
+
+
+          <br />
+          <br />
+          <br />
+
+
+
+
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h3>
+                <Button onClick={this.clickRealizarBúsqueda}
+                  variant="primary" >Modificar Datos</Button>
+              </h3>
+            </Col>
+          </Row>
+
+
+
+
+
+
+
+
+
+          <br />
+          <br />
+          <br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <Container>
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h3>
+                  <Badge variant="light">Mis datos en la Base de Datos</Badge>
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+
+          <br />
+          <br />
+
+          <Row>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <h4>Nombre: {this.state.myNombre}</h4>
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <h4>Edad: {this.state.myEdad}</h4>
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <h4>Pais de Origen: {this.state.myPais}</h4>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+
+          <br />
+          <br />
+
+          <Row>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <BootstrapTable
+                    keyField="name"
+                    data={this.state.myhobbielistJson}
+                    columns={columnsmyHobbie} />
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                  <BootstrapTable
+                    keyField="name"
+                    data={this.state.mymedialistJson}
+                    columns={columnsmyMedio} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+
+          <br />
+          <br />
+
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h4>Idiomas que el usuario deseo aprender</h4>
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.mylearnList}
+                columns={columnslearnDrop}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+
+          <br />
+          <br />
+
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h4>Idiomas que el usuario deseo enseñar</h4>
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.myteachList}
+                columns={columnslearnDrop}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
+
+
+
+
+        </Container>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    );
+  }
+
+}
+
+export default Consulta1Page;
+
+
+/*
+
+CONSULTA1PAGE CSS
+
+*/
+
+
+
+.Consulta1Page {
+    text-align: center;
+    background: linear-gradient(#22c1c3, #fdbb2d);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
