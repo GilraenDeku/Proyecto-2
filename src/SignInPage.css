@@ -1,6 +1,6 @@
 .SignInPage {
     text-align: center;
-    background-image: url(./images/Page3.jpg);
+    background: linear-gradient(#0084ff, #ffc000, #0084ff);
 }
 
 .dropdown-menu {
