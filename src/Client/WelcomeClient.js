@@ -52,7 +52,7 @@ class WelcomeClient extends Component {
       <div className="WelcomeClient">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-          <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+          <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
@@ -64,7 +64,7 @@ class WelcomeClient extends Component {
               <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
               <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
               <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
-              <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+              <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
             </Nav>
 
           </Navbar.Collapse>
@@ -83,7 +83,7 @@ class WelcomeClient extends Component {
               <br />
               <br />
               <br />
-              <h1>Bienvenido {userInfo.name}</h1>
+              <h1>Bienvenid@ {userInfo.name}</h1>
               <p>
                 Esperamos que disfrute las búsquedas
                   </p>
