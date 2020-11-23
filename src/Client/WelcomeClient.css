@@ -1,4 +1,4 @@
 .WelcomeClient {
   align-items: center;
-  background-image: url(../images/Other.png);
+  background: linear-gradient(#fdbb2d, #65ff93, #00d4ff, #fdbb2d);
 }
