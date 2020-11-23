@@ -199,7 +199,7 @@ class IntroPage extends Component {
             <Col sm="12" md={{ size: 6, offset: 0 }}>
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroup-sizing-default">Name</InputGroup.Text>
+                  <InputGroup.Text id="inputGroup-sizing-default">Nombre</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
                   aria-label="Name"
@@ -213,7 +213,7 @@ class IntroPage extends Component {
             <Col sm="12" md={{ size: 6, offset: 3 }}>
               <InputGroup className="mb-3">
                 <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroup-sizing-default">Password</InputGroup.Text>
+                  <InputGroup.Text id="inputGroup-sizing-default">Contraseña</InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
                   type="password"
@@ -228,7 +228,7 @@ class IntroPage extends Component {
             <Col>
               <DropdownButton
                 as={ButtonGroup}
-                title={'Choose Region'}
+                title={'Seleccione la región'}
                 onSelect={this.clickSelectEstado}
               >
                 <Dropdown.Item eventKey="AME">America</Dropdown.Item>
@@ -241,8 +241,8 @@ class IntroPage extends Component {
           <br />
           <Row>
             <Col>
-              <Button variant="primary" onClick={this.clickLogInPresionado}>LogIn</Button>
-              <Button variant="primary" onClick={this.clickPresionado}>SignIn</Button>
+              <Button variant="primary" onClick={this.clickLogInPresionado}>Ingresar</Button>
+              <Button variant="primary" onClick={this.clickPresionado}>Registrar</Button>
             </Col>
           </Row>
         </Container>
