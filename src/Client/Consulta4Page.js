@@ -431,14 +431,14 @@ class Consulta4Page extends Component {
               </Col>
             </Row>
 
-            <br/>
+            <br />
 
             <Row>
               <Col sm="12" md={{ size: 6, offset: 0 }}>
-              <h3>Por favor seleccione el Usuario</h3>
+                <h3>Por favor seleccione el Usuario</h3>
 
 
-              {['Seleccione el Usuario'].map(
+                {['Seleccione el Usuario'].map(
                   (variant) => (
                     <DropdownButton
                       as={ButtonGroup}
@@ -455,7 +455,7 @@ class Consulta4Page extends Component {
                   ),
                 )}
 
-                
+
               </Col>
             </Row>
 
@@ -490,8 +490,8 @@ class Consulta4Page extends Component {
               </Col>
             </Row>
 
-            <br/>
-            <br/>
+            <br />
+            <br />
 
             <Row>
               <Col sm="12" md={{ size: 6, offset: 0 }}>
