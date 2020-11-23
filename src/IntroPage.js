@@ -1,6 +1,6 @@
-import React, { Component }                              from 'react';
-import { Button, Row, Col, Container} from 'reactstrap';
-import { Redirect }                              from 'react-router-dom';
+import React, { Component } from 'react';
+import { Button, Row, Col, Container } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 import { Image, InputGroup, FormControl } from 'react-bootstrap';
 import logo from './images/logo.png';
 import './IntroPage.css';
@@ -11,9 +11,9 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 class IntroPage extends Component {
 
-  constructor(props){
-		super(props)
-		this.state = {
+  constructor(props) {
+    super(props)
+    this.state = {
       loginFlag: false,
       clientFlag: false,
       items: [],
@@ -27,8 +27,8 @@ class IntroPage extends Component {
         country: '',
         learn: [],
         tearn: [],
-        hobbies:[],
-        media:[],
+        hobbies: [],
+        media: [],
         signinFlag: false
       },
       jsonLocalStorage: {
@@ -37,75 +37,75 @@ class IntroPage extends Component {
         teach: null,
         region: ''
       }
-		}
+    }
 
   }
-  
+
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch (err => alert(err))
-    .then(response => response.json())
-    .then(response => this.loginAttempt(response))
-    .catch(err => this.errorHandler(err))
+    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch(err => alert(err))
+      .then(response => response.json())
+      .then(response => this.loginAttempt(response))
+      .catch(err => this.errorHandler(err))
   }
 
   renderRedirect = () => {
     if (this.state.loginFlag) {
-      return <Redirect to='/WelcomePage'/>
-    }else{
+      return <Redirect to='/WelcomePage' />
+    } else {
       if (this.state.signinFlag) {
         return <Redirect to='/SignInPage' />
-      }else{
-        if(this.state.clientFlag) {
+      } else {
+        if (this.state.clientFlag) {
           return <Redirect to='/WelcomeClient' />
         }
       }
     }
   }
 
-  createJsonLocalStorage(name){
-    for(let i = 0; i < this.state.items.length; i++){
-      if(this.state.items[i].name === name){
+  createJsonLocalStorage(name) {
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
         this.state.jsonLocalStorage.name = name;
         this.state.jsonLocalStorage.learn = this.state.items[i].learn;
         this.state.jsonLocalStorage.teach = this.state.items[i].teach;
         this.state.jsonLocalStorage.region = this.state.selectRegion;
         console.log(this.state.jsonLocalStorage);
       }
-      else{
+      else {
       }
     }
   }
 
-  createJsonLocalStorageAdmin(){
+  createJsonLocalStorageAdmin() {
     this.state.jsonLocalStorage.region = this.state.selectRegion;
   }
 
 
-  writeJson = () =>{
+  writeJson = () => {
 
     const newlanguage = 'Dayanna';
 
     const newlevel = '1234';
 
-    this.state.jsonFile.learn.push({"language":  newlanguage, "level": newlevel});
+    this.state.jsonFile.learn.push({ "language": newlanguage, "level": newlevel });
 
     //console.log(this.state.jsonFile);
 
   }
 
-  clickPresionado = (event) =>{
+  clickPresionado = (event) => {
     this.setState({
       signinFlag: true
     })
   }
 
-  inputPresionadoName = (event) =>{
+  inputPresionadoName = (event) => {
     this.setState({
       inputName: event.target.value
     })
   }
 
-  inputPresionadoPassword = (event) =>{
+  inputPresionadoPassword = (event) => {
     this.setState({
       inputPassword: event.target.value
     })
@@ -113,40 +113,40 @@ class IntroPage extends Component {
 
   loginAttempt = (res) => {
     this.setState({
-        items: res
+      items: res
     })
   }
 
   clickSelectEstado = (res) => {
     this.setState({
-          selectRegion: res
-      })
+      selectRegion: res
+    })
   }
 
   clickLogInPresionado = () => {
     var res = false;
-    if(this.state.inputName === ''){
+    if (this.state.inputName === '') {
       alert('Please write your UserName');
-    }else{
-      if(this.state.inputPassword === ''){
+    } else {
+      if (this.state.inputPassword === '') {
         alert('Please write your Password');
-      }else{
-        if(this.state.selectRegion === ''){
+      } else {
+        if (this.state.selectRegion === '') {
           alert('Please select your Region');
-        }else{
+        } else {
           res = this.searchCountry(this.state.inputName);
-          if(res){
+          if (res) {
             this.setState({
               clientFlag: true
             })
-          }else{
-            if(this.state.inputName === 'Admin'){
+          } else {
+            if (this.state.inputName === 'Admin') {
               this.createJsonLocalStorageAdmin();
               this.setState({
                 loginFlag: true
               })
             }
-            else{
+            else {
               alert('UserName or Password is incorrect');
             }
           }
@@ -155,44 +155,44 @@ class IntroPage extends Component {
     }
   }
 
-  searchCountry(name){
+  searchCountry(name) {
     var flag = false;
-    for(let i = 0; i < this.state.items.length; i++){
-      if(this.state.items[i].name === name){
+    for (let i = 0; i < this.state.items.length; i++) {
+      if (this.state.items[i].name === name) {
         flag = true
         this.createJsonLocalStorage(name);
       }
-      else{
+      else {
       }
     }
-    return(flag);
+    return (flag);
   }
-  
+
   render() {
     localStorage.clear();
 
-    if (!localStorage.getItem('user_info')){
+    if (!localStorage.getItem('user_info')) {
       localStorage.setItem('user_info', '');
     }
 
 
     localStorage.setItem('user_info', JSON.stringify(this.state.jsonLocalStorage));
-    
+
     return (
       <div className='IntroPage'>
         {this.renderRedirect()}
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
 
         <h1>PROYECTO #2</h1>
 
-        <br/>
+        <br />
 
         <Image src={logo} fluid />
 
-        <br/>
-        <br/>
+        <br />
+        <br />
 
         <Container>
           <Row className="justify-content-md-center">
@@ -226,19 +226,19 @@ class IntroPage extends Component {
           </Row>
           <Row>
             <Col>
-            <DropdownButton
-				        as={ButtonGroup}
+              <DropdownButton
+                as={ButtonGroup}
                 title={'Choose Region'}
                 onSelect={this.clickSelectEstado}
-				      >
-				        <Dropdown.Item eventKey="AME">America</Dropdown.Item>
-				        <Dropdown.Item eventKey="EUR">Europe</Dropdown.Item>
-				        <Dropdown.Item eventKey="ASI">Asia</Dropdown.Item>
-				      </DropdownButton>
+              >
+                <Dropdown.Item eventKey="AME">America</Dropdown.Item>
+                <Dropdown.Item eventKey="EUR">Europe</Dropdown.Item>
+                <Dropdown.Item eventKey="ASI">Asia</Dropdown.Item>
+              </DropdownButton>
               <p>{this.state.selectRegion}</p>
             </Col>
           </Row>
-          <br/>
+          <br />
           <Row>
             <Col>
               <Button variant="primary" onClick={this.clickLogInPresionado}>LogIn</Button>
@@ -247,16 +247,16 @@ class IntroPage extends Component {
           </Row>
         </Container>
 
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     );
-  } 
+  }
 }
 
 export default IntroPage
