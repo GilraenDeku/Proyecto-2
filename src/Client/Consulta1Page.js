@@ -14,6 +14,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import BootstrapTable from 'react-bootstrap-table-next';
+import paginationfactory from 'react-bootstrap-table2-paginator';
 
 
 class Consulta1Page extends Component {
@@ -64,7 +65,13 @@ class Consulta1Page extends Component {
       mymediaList: [],
       mymedialistJson: [],
       selectMedia: '',
-      usersList: []
+      usersList: [],
+
+      myteachList: [],
+      mylearnList: [],
+      myNombre: '',
+      myEdad: '',
+      myPais: ''
 
     }
   }
@@ -100,16 +107,34 @@ class Consulta1Page extends Component {
 
 
   asignarMisListas = () => {
+    var temLearn = [];
+    var temTeach = [];
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
     const name = userInfo.name;
     for (let i = 0; i < this.state.usersList.length; i++) {
       if (this.state.usersList[i].name === name) {
         this.state.myhobbielist = this.state.usersList[i].hobbies;
         this.state.mymediaList = this.state.usersList[i].media;
+        this.state.myNombre = name;
+        this.state.myEdad = this.state.usersList[i].age;
+        this.state.myPais = this.state.usersList[i].country;
+        this.actualizarLenguajes(this.state.usersList[i].learn, this.state.usersList[i].teach)
       }
     }
     this.asignarHobbieListJson();
     this.asignarMediaListJson();
+  }
+
+  actualizarLenguajes(e, t) {
+    this.setState({
+      mylearnList: e,
+      myteachList: t
+    })
+
+    console.log('LEARN');
+    console.log(this.state.mylearnList);
+    console.log('TEACH');
+    console.log(this.state.myteachList);
   }
 
   asignarMediaListJson = () => {
@@ -242,6 +267,11 @@ class Consulta1Page extends Component {
       { dataField: 'age', text: 'Edad' },
       { dataField: 'gender', text: 'Género' }
     ];
+
+    const columnslearnDrop = [
+      { dataField: 'language', text: 'Lenguaje' },
+      { dataField: 'level', text: 'Nivel' }
+    ]
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
     this.state.temlistTeach = userInfo.teach;
     this.state.temlistLearn = userInfo.learn;
@@ -405,16 +435,43 @@ class Consulta1Page extends Component {
             <Row>
               <Col sm="12" md={{ size: 6, offset: 0 }}>
                 <h3>
-                  <Badge variant="light">Mis Hobbies y Medios de Contacto en la Base de Datos</Badge>
+                  <Badge variant="light">Mis datos en la Base de Datos</Badge>
                 </h3>
               </Col>
             </Row>
           </Container>
 
+          <br />
+          <br />
 
           <Row>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                    <h4>Nombre: {this.state.myNombre}</h4>
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                <h4>Edad: {this.state.myEdad}</h4>
+                </Col>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="justify-content-md-center">
+                <Col md="auto">
+                <h4>Pais de Origen: {this.state.myPais}</h4>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
 
+          <br />
+          <br />
 
+          <Row>
             <Col>
               <Row className="justify-content-md-center">
                 <Col md="auto">
@@ -425,8 +482,6 @@ class Consulta1Page extends Component {
                 </Col>
               </Row>
             </Col>
-
-
             <Col>
               <Row className="justify-content-md-center">
                 <Col md="auto">
@@ -438,6 +493,40 @@ class Consulta1Page extends Component {
               </Row>
             </Col>
           </Row>
+
+          <br />
+            <br />
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario deseo aprender</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.mylearnList}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+            <br/>
+            <br/>
+
+            <Row>
+              <Col sm="12" md={{ size: 6, offset: 0 }}>
+                <h4>Idiomas que el usuario deseo enseñar</h4>
+                <br />
+                <BootstrapTable
+                  keyField="_id"
+                  data={this.state.myteachList}
+                  columns={columnslearnDrop}
+                  pagination={paginationfactory()} />
+              </Col>
+            </Row>
+
+
+
+
         </Container>
         <br />
         <br />
