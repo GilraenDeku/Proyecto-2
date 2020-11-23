@@ -202,7 +202,7 @@ class Consulta4Page extends Component {
         <div className="Consulta4Page">
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
-            <Navbar.Brand href="./WelcomeClient">Bienvenido</Navbar.Brand>
+            <Navbar.Brand href="./WelcomeClient">Bienvenid@</Navbar.Brand>
 
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
@@ -214,7 +214,7 @@ class Consulta4Page extends Component {
                 <Nav.Link href="./Consulta4Page">Búsqueda idiomas que Enseño y que me enseñen por País</Nav.Link>
                 <Nav.Link href="./Consulta5Page">Búsqueda idiomas que Enseño y que me enseñen por País y rango Edad</Nav.Link>
                 <Nav.Link href="./Consulta1Page">Modificar mis datos</Nav.Link>
-                <Nav.Link onClick={this.clickPresionado}>LogOut</Nav.Link>
+                <Nav.Link onClick={this.clickPresionado}>Salir</Nav.Link>
               </Nav>
 
             </Navbar.Collapse>
