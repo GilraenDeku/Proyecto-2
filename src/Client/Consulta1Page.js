@@ -448,21 +448,21 @@ class Consulta1Page extends Component {
             <Col>
               <Row className="justify-content-md-center">
                 <Col md="auto">
-                    <h4>Nombre: {this.state.myNombre}</h4>
+                  <h4>Nombre: {this.state.myNombre}</h4>
                 </Col>
               </Row>
             </Col>
             <Col>
               <Row className="justify-content-md-center">
                 <Col md="auto">
-                <h4>Edad: {this.state.myEdad}</h4>
+                  <h4>Edad: {this.state.myEdad}</h4>
                 </Col>
               </Row>
             </Col>
             <Col>
               <Row className="justify-content-md-center">
                 <Col md="auto">
-                <h4>Pais de Origen: {this.state.myPais}</h4>
+                  <h4>Pais de Origen: {this.state.myPais}</h4>
                 </Col>
               </Row>
             </Col>
@@ -495,34 +495,34 @@ class Consulta1Page extends Component {
           </Row>
 
           <br />
-            <br />
+          <br />
 
-            <Row>
-              <Col sm="12" md={{ size: 6, offset: 0 }}>
-                <h4>Idiomas que el usuario deseo aprender</h4>
-                <br />
-                <BootstrapTable
-                  keyField="_id"
-                  data={this.state.mylearnList}
-                  columns={columnslearnDrop}
-                  pagination={paginationfactory()} />
-              </Col>
-            </Row>
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h4>Idiomas que el usuario deseo aprender</h4>
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.mylearnList}
+                columns={columnslearnDrop}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
 
-            <br/>
-            <br/>
+          <br />
+          <br />
 
-            <Row>
-              <Col sm="12" md={{ size: 6, offset: 0 }}>
-                <h4>Idiomas que el usuario deseo enseñar</h4>
-                <br />
-                <BootstrapTable
-                  keyField="_id"
-                  data={this.state.myteachList}
-                  columns={columnslearnDrop}
-                  pagination={paginationfactory()} />
-              </Col>
-            </Row>
+          <Row>
+            <Col sm="12" md={{ size: 6, offset: 0 }}>
+              <h4>Idiomas que el usuario deseo enseñar</h4>
+              <br />
+              <BootstrapTable
+                keyField="_id"
+                data={this.state.myteachList}
+                columns={columnslearnDrop}
+                pagination={paginationfactory()} />
+            </Col>
+          </Row>
 
 
 
