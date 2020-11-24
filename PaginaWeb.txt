@@ -5364,11 +5364,340 @@ CONSULTA1PAGE CSS
     background: linear-gradient(#22c1c3, #fdbb2d);
 }
 
+/*
+
+SERVER
+
+*/
+
+const express = require("express");
+const server = express();
+const body_parser = require("body-parser");
+const db = require("./db");
+const cors = require('cors');
+
+server.use(body_parser.json());
+server.use(cors());
+
+const port = process.env.PORT || 5000;
+
+server.listen(port, () => {
+    console.log("App is running on port " + port);
+});
+
+server.get("/", (req, res) => {
+    res.end("Hello World!");
+});
+
+/*
+CONSULTAS A LA APLICACIÓN DE LOS USUARIOS
+*/
+server.get("/get", (req, res) => {
+    const {continent, collection} = req.query;
+
+    db.do_query(continent, "FIND", collection, (data) => {
+        res.json(data);
+    });
+});
+
+server.post("/get_user", (req, res) => {
+    const username = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "FIND_USER", username, (data) => {
+        if(data.length == 1){
+            res.json(data);
+        }else{
+            res.sendStatus(404);
+        }
+        
+    });
+});
+
+server.post("/register", (req, res) => {
+    const new_user = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "REGISTER", new_user, (data) => {
+        console.log(data);
+    });
+    res.sendStatus(200);
+});
+
+
+server.put("/update", (req, res) => {
+    const new_info = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "UPDATE", new_info, (data) => {
+        console.log(data);
+    });
+    res.sendStatus(200);
+});
+
+
+server.post("/people_learn", (req, res) => {
+    const info = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_LEARN", info, (data) => {
+        res.json(data);
+    });
+});
+
+server.post("/people_learn_teach", (req, res) => {
+    const info = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_LEARN_TEACH", info, (data) => {
+        res.json(data);
+    });
+});
+
+server.post("/people_learn_teach_country", (req, res) => {
+    const info = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_LEARN_TEACH_COUNTRY", info, (data) => {
+        res.json(data);
+    });
+});
+
+
+server.post("/people_learn_teach_country_age", (req, res) => {
+    const info = req.body;
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_LEARN_TEACH_COUNTRY_AGE", info, (data) => {
+        res.json(data);
+    });
+});
+
+
+/*
+CONSULTAS A LA APLICACIÓN DE LOS ADMINISTRADORES
+*/
+
+server.get("/people_by_country", (req, res) => {
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_BY_COUNTRY", null, (data) => {
+        res.json(data);
+    });
+});
+
+server.get("/people_by_learn", (req, res) => {
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_BY_LEARN", null, (data) => {
+        res.json(data);
+    });
+});
+
+server.get("/people_by_teach", (req, res) => {
+    const {continent} = req.query;
+
+    db.do_query(continent, "PEOPLE_BY_TEACH", null, (data) => {
+        res.json(data);
+    });
+});
+
+//db.user.aggregate( [ { $group : { _id : "$teach.language", count: { $sum: 1 } } } ] )
+//db.user.aggregate( [ {$unwind: "$learn" } ] )
+
+//db.user.aggregate( [ {$unwind: "$learn" }, { $group : { _id : "$learn.language", count: { $sum: 1 } } } ] )
+
+/*
+if (!localStorage.getItem('user_info')){
+    localStorage.setItem('user_info', '');
+}
+
+    var info = { "username": "Joseda8", 
+                "learn":[
+                {"language":"English", "level":"Intermedio"},
+                {"language":"Spanish", "lastName":"Avanzado"}
+                ],
+                "teach":[
+                {"language":"German", "level":"Principiante"},
+                ],
+            };
+
+    localStorage.setItem('user_info', info);
+*/
 
 
 
+/*
+
+DB
+
+*/
 
 
+const MongoClient = require("mongodb").MongoClient;
+
+const db_america = "mongodb+srv://admin:test@america.45mtz.mongodb.net/DB_Languages?retryWrites=true&w=majority";
+const db_asia = "mongodb+srv://admin:test@asia.5zgyr.mongodb.net/DB_Languages?retryWrites=true&w=majority";
+const db_europe = "mongodb+srv://admin:test@europe.hijtj.mongodb.net/DB_Languages?retryWrites=true&w=majority";
+
+const nodes = {"AME": 0, "ASI": 1, "EUR": 2};
+var db_url = [db_america, db_asia, db_europe];
+
+const dbName = "DB_Languages";
+
+
+function do_query_to_cluster(cluster, query, info, dataCallback){
+
+    MongoClient.connect(db_url[nodes[cluster]], function lambda(err, dbInstance) {
+
+        if (err) {
+            console.log(`[MongoDB connection] ERROR: ${err}`);
+            dataCallback(err);
+
+        } else {
+            const dbObject = dbInstance.db(dbName);
+            const collection = "user";
+            var dbCollection = dbObject.collection(collection);
+
+            switch(query) {
+
+                case "REGISTER": 
+                    dbCollection.insertOne(info, (error, result) => {
+                        if(error){console.log(error);}
+                    });
+                  break;
+
+                case "UPDATE":
+                    dbCollection.updateOne({ name: info.name }, { $set: {hobbies: info.hobbies, media: info.media} }, (error, result) => {
+                        if(error){console.log(error);}
+                    });
+                    break;
+
+                default:
+                    dataCallback("Incorrect query");
+              }
+        
+            dbInstance.close();
+        }
+    });
+}
+
+function do_query(cluster, query, info, dataCallback){
+    var this_db_url = ["AME", "ASI", "EUR"];
+    delete this_db_url[nodes[cluster]];
+
+    MongoClient.connect(db_url[nodes[cluster]], function lambda(err, dbInstance) {
+
+        if (err) {
+            console.log(`[MongoDB connection] ERROR: ${err}`);
+            
+            if(this_db_url.length == 0){
+                dataCallback(err);
+            }else{
+                MongoClient.connect(db_url[nodes[this_db_url.shift()]], lambda);
+            }
+
+        } else {
+            const dbObject = dbInstance.db(dbName);
+            const collection = "user";
+            var dbCollection = dbObject.collection(collection);
+
+            switch(query) {
+                case "FIND":
+                    dbCollection = dbObject.collection(info); 
+                    dbCollection.find({}, { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                    case "FIND_USER":
+                        dbCollection.find({ name: info.name }, { projection: {_id:0}} ).toArray(function(error, result) {
+                            if(error){console.log(error);}
+                            dataCallback(result);
+                        });
+                        break;
+
+                case "REGISTER": 
+                    dbCollection.insertOne(info, (error, result) => {
+                        if(error){console.log(error);}
+                    });
+                  break;
+
+                case "UPDATE":
+                    dbCollection.updateOne({ name: info.name }, { $set: {hobbies: info.hobbies, media: info.media} }, (error, result) => {
+                        if(error){console.log(error);}
+                    });
+                    break;
+
+                case "PEOPLE_LEARN":
+                    dbCollection.find({"learn.language": {$in: info.learn}}, { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+                
+                case "PEOPLE_LEARN_TEACH":
+                    dbCollection.find({$and: [{"learn.language": {$in: info.learn}}, {"teach.language": {$in: info.teach}}]}, 
+                    { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                case "PEOPLE_LEARN_TEACH_COUNTRY":
+                    dbCollection.find({$and: [{"learn.language": {$in: info.learn}}, {"teach.language": {$in: info.teach}}, {"country": info.country}]}, 
+                    { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                case "PEOPLE_LEARN_TEACH_COUNTRY_AGE":
+                    dbCollection.find({$and: [{"learn.language": {$in: info.learn}}, {"teach.language": {$in: info.teach}}, 
+                    {"country": info.country}, {"age": {$gte: info.min, $lte: info.max}}]}, 
+                    { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                case "PEOPLE_BY_COUNTRY":
+                    dbCollection = dbObject.collection(collection);
+                    dbCollection.aggregate([ { $group : { _id : "$country", count: { $sum: 1 } } } ]).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+                
+                case "PEOPLE_BY_LEARN":
+                    dbCollection = dbObject.collection(collection);
+                    dbCollection.aggregate([{$unwind: "$learn" }, { $group : { _id : "$learn.language", count: { $sum: 1 } } } ]).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                case "PEOPLE_BY_TEACH":
+                    dbCollection = dbObject.collection(collection);
+                    dbCollection.aggregate([{$unwind: "$teach" }, { $group : { _id : "$teach.language", count: { $sum: 1 } } } ]).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
+
+                default:
+                    dataCallback("Incorrect query");
+              }
+        
+            dbInstance.close();
+        }
+    });
+}
+
+module.exports = {
+    do_query, do_query_to_cluster
+};
 
 
 
