@@ -141,7 +141,7 @@ class Consulta4Page extends Component {
 
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.countryAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -157,7 +157,7 @@ class Consulta4Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn_teach_country?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn_teach_country?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
