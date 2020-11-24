@@ -35,9 +35,9 @@ class Learning extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'))
 
     console.log('Region que el usuario escogió');
-    console.log(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`);
+    console.log(`https://bda-p2-server.azurewebsites.net/people_by_learn?continent=${userInfo.region}`);
 
-    await fetch(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/people_by_learn?continent=${userInfo.region}`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
