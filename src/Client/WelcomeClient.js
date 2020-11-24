@@ -47,7 +47,7 @@ class WelcomeClient extends Component {
     console.log(userInfo);
 
     console.log('URL con la region');
-    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=level`);
+    console.log(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=level`);
     return (
       <div className="WelcomeClient">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
