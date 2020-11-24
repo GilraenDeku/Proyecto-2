@@ -68,7 +68,7 @@ class Learning extends Component {
     const columnsMeansPractice = [
       { dataField: '_id', text: 'Lenguaje' },
       { dataField: 'count', text: 'Cantidad de personas' }
-    ];
+    ]
     return (
       <div className="Learning">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
