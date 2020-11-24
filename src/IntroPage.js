@@ -42,7 +42,7 @@ class IntroPage extends Component {
   }
 
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=user`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
