@@ -80,18 +80,18 @@ class Consulta1Page extends Component {
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.userAttempt(response))
       .catch(err => this.errorHandler(err))
 
 
-    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=hobbie`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=hobbie`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.hobbiesAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=media`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=media`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.mediaAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -229,7 +229,7 @@ class Consulta1Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/update?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/update?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'PUT',
