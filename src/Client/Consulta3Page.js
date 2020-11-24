@@ -117,7 +117,7 @@ class Consulta3Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn_teach?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn_teach?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
