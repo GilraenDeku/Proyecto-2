@@ -49,7 +49,7 @@ class IntroPage extends Component {
   }
 
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=user`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=user`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -373,27 +373,27 @@ class SignInPage extends Component {
   }
 
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=country`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=country`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.countryAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=language`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=language`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.languageAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=level`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=level`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.levelAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.hobbieAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    fetch(`http://localhost:5000/get?continent=EUR&collection=media`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=media`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.meansAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -561,7 +561,7 @@ class SignInPage extends Component {
 
   registerNewUser = async (e) => {
     alert('El usuario se registró correctamente');
-    const url = `http://localhost:5000/register?continent=${this.state.selectRegion}`;
+    const url = `https://bda-p2-server.azurewebsites.net/register?continent=${this.state.selectRegion}`;
 
     const requestOptions = {
       method: 'POST',
@@ -1198,9 +1198,9 @@ class Country extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'))
 
     console.log('Region que el usuario escogió');
-    console.log(`http://localhost:5000/people_by_country?continent=${userInfo.region}`);
+    console.log(`https://bda-p2-server.azurewebsites.net/people_by_country?continent=${userInfo.region}`);
 
-    await fetch(`http://localhost:5000/people_by_country?continent=${userInfo.region}`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/people_by_country?continent=${userInfo.region}`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -1353,9 +1353,9 @@ class Learning extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'))
 
     console.log('Region que el usuario escogió');
-    console.log(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`);
+    console.log(`https://bda-p2-server.azurewebsites.net/people_by_learn?continent=${userInfo.region}`);
 
-    await fetch(`http://localhost:5000/people_by_learn?continent=${userInfo.region}`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/people_by_learn?continent=${userInfo.region}`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -1386,7 +1386,7 @@ class Learning extends Component {
     const columnsMeansPractice = [
       { dataField: '_id', text: 'Lenguaje' },
       { dataField: 'count', text: 'Cantidad de personas' }
-    ];
+    ]
     return (
       <div className="Learning">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -1504,6 +1504,7 @@ class Register extends Component {
       nameList: [],
       countryList: [],
       lenguajesList: [],
+      lenguajesListTeach: [],
       selectName: '',
       selectCounrty: '',
       error: null,
@@ -1517,9 +1518,9 @@ class Register extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'))
 
     console.log('Region que el usuario escogió');
-    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`);
+    console.log(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=user`);
 
-    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -1547,11 +1548,13 @@ class Register extends Component {
     this.searchCountry(e);
   }
 
-  updateStates = (newC, newN, newL) => {
+  updateStates = (newC, newN, newL, newT) => {
     this.setState({
       selectCounrty: newC,
       selectName: newN,
-      lenguajesList: newL
+      lenguajesList: newL,
+      lenguajesListTeach: newT
+
     })
   }
 
@@ -1559,7 +1562,7 @@ class Register extends Component {
     var test = [];
     for (let i = 0; i < this.state.items.length; i++) {
       if (this.state.items[i].name == name) {
-        this.updateStates(this.state.items[i].country, name, this.state.items[i].learn);
+        this.updateStates(this.state.items[i].country, name, this.state.items[i].learn, this.state.items[i].teach);
       }
       else {
       }
@@ -1580,7 +1583,11 @@ class Register extends Component {
 
   render() {
     const columnsMeansPractice = [
-      { dataField: 'language', text: 'Lenguajes que desea practicar' },
+      { dataField: 'language', text: 'Lenguajes' },
+      { dataField: 'level', text: 'Nivel de dominio' }
+    ];
+    const columnsMeansPracticeTeach = [
+      { dataField: 'language', text: 'Lenguajes' },
       { dataField: 'level', text: 'Nivel de dominio' }
     ];
     return (
@@ -1646,10 +1653,24 @@ class Register extends Component {
                 </Col>
               </Row>
 
+              <br/>
+
+              <h4>Lenguajes que se desea aprender</h4>
+
               <BootstrapTable
                 keyField="_id"
                 data={this.state.lenguajesList}
                 columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+
+
+                <br/>
+
+                <h4>Lenguajes que se desea enseñar</h4>
+                <BootstrapTable
+                keyField="_id"
+                data={this.state.lenguajesListTeach}
+                columns={columnsMeansPracticeTeach}
                 pagination={paginationfactory()} />
             </Col>
           </Row>
@@ -1733,9 +1754,9 @@ class Teaching extends Component {
     const userInfo = JSON.parse(localStorage.getItem('user_info'))
 
     console.log('Region que el usuario escogió');
-    console.log(`http://localhost:5000/people_by_teach?continent=${userInfo.region}`);
+    console.log(`https://bda-p2-server.azurewebsites.net/people_by_teach?continent=${userInfo.region}`);
 
-    await fetch(`http://localhost:5000/people_by_teach?continent=${userInfo.region}`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/people_by_teach?continent=${userInfo.region}`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.loginAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -1956,7 +1977,6 @@ export default WelcomePage;
 
 
 
-
 /*
 
 WELCOMEPAGE CSS
@@ -2039,7 +2059,7 @@ class WelcomeClient extends Component {
     console.log(userInfo);
 
     console.log('URL con la region');
-    console.log(`http://localhost:5000/get?continent=${userInfo.region}&collection=level`);
+    console.log(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=level`);
     return (
       <div className="WelcomeClient">
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -2101,7 +2121,6 @@ class WelcomeClient extends Component {
 }
 
 export default WelcomeClient;
-
 
 /*
 
@@ -2263,7 +2282,7 @@ class Consulta5Page extends Component {
 
     } else {
       this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
-      this.state.jsonFile.learn.push(this.state.languageLearn);
+      this.state.jsonFile.teach.push(this.state.languageLearn);
     }
   }
 
@@ -2301,7 +2320,7 @@ class Consulta5Page extends Component {
 
     } else {
       this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
-      this.state.jsonFile.teach.push(this.state.languageTeach);
+      this.state.jsonFile.learn.push(this.state.languageTeach);
     }
   }
 
@@ -2315,7 +2334,7 @@ class Consulta5Page extends Component {
 
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.countryAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -2331,7 +2350,7 @@ class Consulta5Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn_teach_country_age?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn_teach_country_age?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
@@ -3133,7 +3152,7 @@ class Consulta4Page extends Component {
 
     } else {
       this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
-      this.state.jsonFile.learn.push(this.state.languageLearn);
+      this.state.jsonFile.teach.push(this.state.languageLearn);
     }
   }
 
@@ -3156,7 +3175,7 @@ class Consulta4Page extends Component {
 
     } else {
       this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
-      this.state.jsonFile.teach.push(this.state.languageTeach);
+      this.state.jsonFile.learn.push(this.state.languageTeach);
     }
   }
 
@@ -3170,7 +3189,7 @@ class Consulta4Page extends Component {
 
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=country`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.countryAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -3186,7 +3205,7 @@ class Consulta4Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn_teach_country?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn_teach_country?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
@@ -3852,7 +3871,7 @@ class Consulta3Page extends Component {
 
     } else {
       this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
-      this.state.jsonFile.learn.push(this.state.languageLearn);
+      this.state.jsonFile.teach.push(this.state.languageLearn);
     }
   }
 
@@ -3861,7 +3880,7 @@ class Consulta3Page extends Component {
 
     } else {
       this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
-      this.state.jsonFile.teach.push(this.state.languageTeach);
+      this.state.jsonFile.learn.push(this.state.languageTeach);
     }
   }
 
@@ -3874,9 +3893,11 @@ class Consulta3Page extends Component {
 
   busquedaResultados = async () => {
 
+    console.log(this.state.jsonFile);
+
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn_teach?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn_teach?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
@@ -4346,7 +4367,6 @@ CONSULTA2PAGE CSS
 */
 
 
-
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Button } from 'reactstrap';
@@ -4488,7 +4508,7 @@ class Consulta2Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/people_learn?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/people_learn?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'POST',
@@ -4886,18 +4906,18 @@ class Consulta1Page extends Component {
   componentDidMount = async (e) => {
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=user`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.userAttempt(response))
       .catch(err => this.errorHandler(err))
 
 
-    await fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=hobbie`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=hobbie`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.hobbiesAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    fetch(`http://localhost:5000/get?continent=${userInfo.region}&collection=media`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=${userInfo.region}&collection=media`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.mediaAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -5035,7 +5055,7 @@ class Consulta1Page extends Component {
 
     const userInfo = JSON.parse(localStorage.getItem('user_info'));
 
-    const url = `http://localhost:5000/update?continent=${userInfo.region}`;
+    const url = `https://bda-p2-server.azurewebsites.net/update?continent=${userInfo.region}`;
 
     const requestOptions = {
       method: 'PUT',
@@ -5389,6 +5409,38 @@ server.get("/", (req, res) => {
     res.end("Hello World!");
 });
 
+
+server.get("/retrieve_data", (req, res) => {
+    const {continent, collection} = req.query;
+
+    db.do_query_to_cluster(continent, "FIND", collection, (data) => {
+        res.json(data);
+    });
+});
+
+server.post("/register_missing", (req, res) => {
+    const new_user = req.body;
+    const {continent} = req.query;
+
+    db.do_query_to_cluster(continent, "REGISTER", new_user, (data) => {
+        console.log(data);
+    });
+
+    res.sendStatus(200);
+});
+
+server.put("/update_missing", (req, res) => {
+    const new_info = req.body;
+    const {continent} = req.query;
+
+    db.do_query_to_cluster(continent, "UPDATE", new_info, (data) => {
+        console.log(data);
+    });
+
+    res.sendStatus(200);
+});
+
+
 /*
 CONSULTAS A LA APLICACIÓN DE LOS USUARIOS
 */
@@ -5421,6 +5473,7 @@ server.post("/register", (req, res) => {
     db.do_query(continent, "REGISTER", new_user, (data) => {
         console.log(data);
     });
+
     res.sendStatus(200);
 });
 
@@ -5432,6 +5485,7 @@ server.put("/update", (req, res) => {
     db.do_query(continent, "UPDATE", new_info, (data) => {
         console.log(data);
     });
+
     res.sendStatus(200);
 });
 
@@ -5560,6 +5614,14 @@ function do_query_to_cluster(cluster, query, info, dataCallback){
             var dbCollection = dbObject.collection(collection);
 
             switch(query) {
+
+                case "FIND":
+                    dbCollection = dbObject.collection(info); 
+                    dbCollection.find({}, { projection: {_id:0}} ).toArray(function(error, result) {
+                        if(error){console.log(error);}
+                        dataCallback(result);
+                    });
+                    break;
 
                 case "REGISTER": 
                     dbCollection.insertOne(info, (error, result) => {
@@ -5700,8 +5762,210 @@ module.exports = {
 };
 
 
+/*
+
+CHECKER
+
+*/
 
 
+const fetch = require("node-fetch");
+const axios = require('axios')
+
+let AME = [];
+let EUR = [];
+let ASI = [];
+let AME_prev = [];
+let EUR_prev = [];
+let ASI_prev = [];
+let AME_state = true;
+let EUR_state = true;
+let ASI_state = true;
+
+async function intervalFunc() {
+    console.log('Execute')
+
+    await fetch('https://bda-p2-server.azurewebsites.net/retrieve_data?continent=AME&collection=user')
+    .then(response => response.json())
+    .then(data => AME = data);
+
+    await fetch('https://bda-p2-server.azurewebsites.net/retrieve_data?continent=EUR&collection=user')
+    .then(response => response.json())
+    .then(data => EUR = data);
+
+    await fetch('https://bda-p2-server.azurewebsites.net/retrieve_data?continent=ASI&collection=user')
+    .then(response => response.json())
+    .then(data => ASI = data);
+
+    if(EUR.name == 'MongoNetworkError'){
+        EUR_state = false
+        console.log('EUR Error')
+    } else{
+        EUR_state = true
+    }
+
+    if(AME.name == 'MongoNetworkError'){
+        AME_state = false
+        console.log('AME Error')
+    } else{
+        AME_state = true
+    }
+
+    if(ASI.name == 'MongoNetworkError'){
+        ASI_state = false
+        console.log('ASI Error')
+    } else{
+        ASI_state = true
+    }
+
+    if(AME_prev[0] == undefined && AME_state){
+        console.log('AME Initialized')
+        AME_prev = AME
+    }
+
+    if(EUR_prev[0] == undefined && EUR_state){
+        console.log('EUR Initialized')
+        EUR_prev = EUR
+    }
+
+    if(ASI_prev[0] == undefined && ASI_state){
+        console.log('ASI Initialized')
+        ASI_prev = ASI
+    }
+
+    if((JSON.stringify(EUR_prev) != JSON.stringify(EUR)) || ((JSON.stringify(EUR).length > JSON.stringify(AME).length) || (JSON.stringify(EUR).length > JSON.stringify(ASI).length))){
+        if(AME_state){
+            if(JSON.stringify(EUR).length > JSON.stringify(AME).length){
+                let newUsers = EUR.filter(a => !AME.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=AME', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            AME_prev = EUR
+        }
+        if(ASI_state){
+            if(JSON.stringify(EUR).length > JSON.stringify(ASI).length){
+                let newUsers = EUR.filter(a => !ASI.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=ASI', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            ASI_prev = EUR
+        }
+        EUR_prev = EUR
+        
+    }
+
+    if((JSON.stringify(AME_prev) != JSON.stringify(AME)) || ((JSON.stringify(AME).length > JSON.stringify(EUR).length) || (JSON.stringify(AME).length > JSON.stringify(ASI).length))){
+        if(EUR_state){
+            if(JSON.stringify(AME).length > JSON.stringify(EUR).length){
+                let newUsers = AME.filter(a => !EUR.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=EUR', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            EUR_prev = AME
+        }
+        if(ASI_state){
+            if(JSON.stringify(AME).length > JSON.stringify(ASI).length){
+                let newUsers = AME.filter(a => !ASI.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=ASI', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            ASI_prev = AME
+        }
+        AME_prev = AME
+        
+    }
+
+    if((JSON.stringify(ASI_prev) != JSON.stringify(ASI)) || ((JSON.stringify(ASI).length > JSON.stringify(AME).length) || (JSON.stringify(ASI).length > JSON.stringify(EUR).length))){
+        if(AME_state){
+            if(JSON.stringify(ASI).length > JSON.stringify(AME).length){
+                let newUsers = ASI.filter(a => !AME.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=AME', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            AME_prev = ASI
+        }
+        if(EUR_state){
+            if(JSON.stringify(ASI).length > JSON.stringify(EUR).length){
+                let newUsers = ASI.filter(a => !EUR.map(b=>b.name).includes(a.name))
+                for (i in newUsers){
+                    await axios
+                    .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=EUR', newUsers[i])
+                    .then(res => {
+                        i = i + 1
+                        console.log(res)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                }
+            }
+            EUR_prev = ASI
+        }
+        ASI_prev = ASI
+        
+    }
+
+
+
+    
+        /*axios
+        .post('https://bda-p2-server.azurewebsites.net/register_missing?continent=AME', EUR[22])
+        .then(res => {
+            i = i + 1
+            console.log(res)
+        })
+        .catch(error => {
+            console.error(error)
+        })*/
+    
+}
+  
+setInterval(intervalFunc, 30000);
 
 
 
