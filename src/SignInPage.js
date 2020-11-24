@@ -77,27 +77,27 @@ class SignInPage extends Component {
   }
 
   componentDidMount = async (e) => {
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=country`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=country`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.countryAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=language`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=language`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.languageAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=level`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=level`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.levelAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    await fetch(`http://localhost:5000/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
+    await fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=hobbie`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.hobbieAttempt(response))
       .catch(err => this.errorHandler(err))
 
-    fetch(`http://localhost:5000/get?continent=EUR&collection=media`).catch(err => alert(err))
+    fetch(`https://bda-p2-server.azurewebsites.net/get?continent=EUR&collection=media`).catch(err => alert(err))
       .then(response => response.json())
       .then(response => this.meansAttempt(response))
       .catch(err => this.errorHandler(err))
@@ -265,7 +265,7 @@ class SignInPage extends Component {
 
   registerNewUser = async (e) => {
     alert('El usuario se registró correctamente');
-    const url = `http://localhost:5000/register?continent=${this.state.selectRegion}`;
+    const url = `https://bda-p2-server.azurewebsites.net/register?continent=${this.state.selectRegion}`;
 
     const requestOptions = {
       method: 'POST',
