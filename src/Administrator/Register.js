@@ -31,6 +31,7 @@ class Register extends Component {
       nameList: [],
       countryList: [],
       lenguajesList: [],
+      lenguajesListTeach: [],
       selectName: '',
       selectCounrty: '',
       error: null,
@@ -74,11 +75,13 @@ class Register extends Component {
     this.searchCountry(e);
   }
 
-  updateStates = (newC, newN, newL) => {
+  updateStates = (newC, newN, newL, newT) => {
     this.setState({
       selectCounrty: newC,
       selectName: newN,
-      lenguajesList: newL
+      lenguajesList: newL,
+      lenguajesListTeach: newT
+
     })
   }
 
@@ -86,7 +89,7 @@ class Register extends Component {
     var test = [];
     for (let i = 0; i < this.state.items.length; i++) {
       if (this.state.items[i].name == name) {
-        this.updateStates(this.state.items[i].country, name, this.state.items[i].learn);
+        this.updateStates(this.state.items[i].country, name, this.state.items[i].learn, this.state.items[i].teach);
       }
       else {
       }
@@ -107,7 +110,11 @@ class Register extends Component {
 
   render() {
     const columnsMeansPractice = [
-      { dataField: 'language', text: 'Lenguajes que desea practicar' },
+      { dataField: 'language', text: 'Lenguajes' },
+      { dataField: 'level', text: 'Nivel de dominio' }
+    ];
+    const columnsMeansPracticeTeach = [
+      { dataField: 'language', text: 'Lenguajes' },
       { dataField: 'level', text: 'Nivel de dominio' }
     ];
     return (
@@ -173,10 +180,24 @@ class Register extends Component {
                 </Col>
               </Row>
 
+              <br/>
+
+              <h4>Lenguajes que se desea aprender</h4>
+
               <BootstrapTable
                 keyField="_id"
                 data={this.state.lenguajesList}
                 columns={columnsMeansPractice}
+                pagination={paginationfactory()} />
+
+
+                <br/>
+
+                <h4>Lenguajes que se desea enseñar</h4>
+                <BootstrapTable
+                keyField="_id"
+                data={this.state.lenguajesListTeach}
+                columns={columnsMeansPracticeTeach}
                 pagination={paginationfactory()} />
             </Col>
           </Row>
