@@ -137,7 +137,7 @@ class Consulta5Page extends Component {
 
     } else {
       this.state.guardarLenguageLearn.push({ 'language': this.state.languageLearn });
-      this.state.jsonFile.learn.push(this.state.languageLearn);
+      this.state.jsonFile.teach.push(this.state.languageLearn);
     }
   }
 
@@ -175,7 +175,7 @@ class Consulta5Page extends Component {
 
     } else {
       this.state.guardarLenguageTeach.push({ 'language': this.state.languageTeach });
-      this.state.jsonFile.teach.push(this.state.languageTeach);
+      this.state.jsonFile.learn.push(this.state.languageTeach);
     }
   }
 
